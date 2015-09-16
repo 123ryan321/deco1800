@@ -2,10 +2,10 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Australian Tour Game</title>
+		<title>Simple Canvas Game</title>
 
 		<link href="styles.css" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="js/pop_up.js"></script>
+		<script type="text/javascript" src="css-pop.js"></script>
 
 	</head>
 	<body>
