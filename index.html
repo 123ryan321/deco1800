@@ -10,20 +10,34 @@
 	</head>
 	<body>
 
+
 		
 
 
 	    <div id="blanket" style="display:none;"></div>
 		<div id="popUpDiv" style="display:none;">
-    
-    		<a href="#" onclick="popup('popUpDiv')" >Click to Close CSS Pop Up</a>
+    		
+    		<br><center id = "location">LOCATION</center>
+
+    		<p class="question"> A QUESTION ABOUT THIS REGION</p>
+			<ul class="answers">
+			<input type="radio" name="q" value="a" id="A"><label for="A">Incorrect</label><br/>
+			<input type="radio" name="q" value="b" id="B"><label for="B">Incorrect</label><br/>
+			<input type="radio" name="q" value="c" id="C"><label for="C">CORRECT</label><br/>
+			<input type="radio" name="q" value="d" id="D"><label for="D">Incorrect</label><br/>
+			</ul> 
+
+    		<br>
+    		<button id="some_id1">Submit</button>
+			<button id="some_id2">Hint</button>
+
+<!--     		<a href="#" onclick="popup('popUpDiv')" >Click to Close CSS Pop Up</a> -->
 		</div>	
 
   		<!-- <a href="#" onclick="popup('popUpDiv')">Click to Open CSS Pop Up</a> -->
 
 
   		<script src="js/game.js"></script>
-
   		
 
 	</body>
