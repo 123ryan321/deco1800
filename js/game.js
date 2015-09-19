@@ -118,19 +118,15 @@ var time = {
 		this.curr = 0;
 		this.then = Date.now();
 		this.paused = false;
-
 	}, 
-
 	pause: function() {
 		this.paused = true;
 	}, 
-
 	resume:function(){
 		this.then = Date.now();
 		this.paused = false;
 
 	},
-
 	get: function(){
 		if(!this.paused) {
 			this.now = Date.now();
@@ -138,11 +134,8 @@ var time = {
 
 			this.then = this.now;	
 		};
-
 		//convert to MM:SS
-		
 		return msToTime(this.curr);
-
 	}
 }
 
@@ -158,8 +151,97 @@ function msToTime(duration) {
     return minutes + ":" + seconds + "." + milliseconds;
 }
 
+
+//sprite for player and movements
+function Sprite(imSrc, numFrames) {
+	
+	//Image
+	this.ready = false;
+	this.img = new Image();
+	
+	this.imgLoad = function() {
+		this.ready = true;
+	}
+	this.img.onload = this.imgLoad();
+	
+	
+	this.img.src = imSrc;
+		
+	this.numFrames = numFrames;	//per direction
+	this.w = this.img.width/numFrames;	//width of sprite (const)
+	this.h = this.img.height/4;	//height of sprite (const)
+	
+	//Start sprite facing downwards
+	this.dir = "down"; 
+	this.x = 0;
+	this.y = 0;
+		
+	//Sprite sheet to be set up  with rows in order below (from top to bottom)
+	this.down = function(){
+		//Move Down
+		if(this.dir == "down") {
+			this.next();
+		} else {
+			//start moving down 
+			this.x = 0;
+			this.y = 0;
+			this.dir = "down";
+		}
+	};
+	
+	this.left = function() {
+		//Move Left
+		if(this.dir == "left") {
+			this.next();
+		} else {
+			//start moving left 
+			this.x = 0;
+			this.y = this.h;
+			this.dir = "left";
+		}
+	};
+	
+	this.right = function() {
+		//Move Right
+		if(this.dir == "right") {
+			this.next();
+		} else {
+			//start moving right 
+			this.x = 0;
+			this.y = 2*this.h;
+			this.dir = "right";
+		}
+	};
+	
+	this.up = function(){
+		//Move up 
+		if(this.dir == "up") {
+			this.next();
+		} else {
+			//start moving up 
+			this.x = 0;
+			this.y = 3*this.h;
+			this.dir = "up";
+		}
+	};
+	
+	this.next = function(){ 
+		//increment frame in same direction
+		this.x += this.w;
+		if(this.x > this.img.width) {this.x = 0}; // return to starting sprite
+	};
+	
+}
+
+
 var player = {
-	speed: 500, // movement in pixels per second
+	
+	//sprite images
+	sprite: new Sprite("images/player_sprite.png", 4),
+	
+	speed: 150, // movement in pixels per second
+		
+	//Absolute values in canvas
 	x: 0,
 	y: 0,
 
@@ -170,19 +252,27 @@ var player = {
 		//move player if keypad input
 		if (38 in keysDown) { // Player holding up
 			this.y -= this.speed * modifier;
-			if (this.y < 0) {this.y = 0};
+			if (this.y < 0) {this.y = 0};	//check bdry
+			
+			player.sprite.up();	//update sprite
 		}
 		if (40 in keysDown) { // Player holding down
 			this.y += this.speed * modifier;
-			if (this.y > window.innerHeight - this.h) {this.y = window.innerHeight - this.h};
+			if (this.y > window.innerHeight - this.h) {this.y = window.innerHeight - this.h}; //check bdry
+			
+			player.sprite.down(); //update sprite
 		}
 		if (37 in keysDown) { // Player holding left
 			this.x -= this.speed * modifier;
-			if(this.x < 0) {this.x = 0};
+			if(this.x < 0) {this.x = 0}; //check bdry
+			
+			player.sprite.left(); //update sprite
 		}
 		if (39 in keysDown) { // Player holding right
 			this.x += this.speed * modifier;
-			if(this.x > window.innerWidth - this.w) {this.x = window.innerWidth - this.w};
+			if(this.x > window.innerWidth - this.w) {this.x = window.innerWidth - this.w}; //check bdry
+			
+			player.sprite.right(); //update sprite
 		}
 
 	},
@@ -364,9 +454,6 @@ var render = function () {
 		ctx.drawImage(bgImage, 0, 0, window.innerWidth, window.innerHeight);
 	}
 
-
-
-
 	if (nodesReady_lck && nodesReady_unlck) {
 		for(i = 0; i < nodes.length ; i ++) {
 			if (nodes[i].locked) {
@@ -379,9 +466,10 @@ var render = function () {
 		}
 		
 	}
-
-	if (playerReady) {
-	ctx.drawImage(playerImage, player.x, player.y, player.w, player.h);
+	
+	
+	if (player.sprite.ready) {
+		ctx.drawImage(player.sprite.img,  player.sprite.x, player.sprite.y, player.sprite.w, player.sprite.h, player.x, player.y, player.w, player.h);
 	}
 
 	// Score
