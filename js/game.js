@@ -82,6 +82,82 @@ nodeHeight = nodeImage_lck.height*scale.h;
 
 
 // Game objects
+var game = {
+	play: false,	//ability to play
+
+	start: function() {
+		this.play = true;
+		time.start();
+
+	},
+
+	pause: function() {
+		this.play = false;
+
+		//pause timer
+		time.pause();
+	},
+
+	resume: function() {
+		this.play = true;
+
+		//restart timer
+		time.resume();
+	},
+
+}
+
+var time = {
+	then: 0, 
+	now: 0,
+	curr: 0,
+
+	paused: true,
+
+	start: function () {
+		this.curr = 0;
+		this.then = Date.now();
+		this.paused = false;
+
+	}, 
+
+	pause: function() {
+		this.paused = true;
+	}, 
+
+	resume:function(){
+		this.then = Date.now();
+		this.paused = false;
+
+	},
+
+	get: function(){
+		if(!this.paused) {
+			this.now = Date.now();
+			this.curr += this.now - this.then;
+
+			this.then = this.now;	
+		};
+
+		//convert to MM:SS
+		
+		return msToTime(this.curr);
+
+	}
+}
+
+//Convert milliseconds to MM:SS:mm
+function msToTime(duration) {
+    var milliseconds = parseInt((duration%1000)/100)
+        , seconds = parseInt((duration/1000)%60)
+        , minutes = parseInt((duration/(1000*60))%60)
+
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    return minutes + ":" + seconds + "." + milliseconds;
+}
+
 var player = {
 	speed: 500, // movement in pixels per second
 	x: 0,
@@ -94,16 +170,29 @@ var player = {
 		//move player if keypad input
 		if (38 in keysDown) { // Player holding up
 			this.y -= this.speed * modifier;
+			if (this.y < 0) {this.y = 0};
 		}
 		if (40 in keysDown) { // Player holding down
 			this.y += this.speed * modifier;
+			if (this.y > window.innerHeight - this.h) {this.y = window.innerHeight - this.h};
 		}
 		if (37 in keysDown) { // Player holding left
 			this.x -= this.speed * modifier;
+			if(this.x < 0) {this.x = 0};
 		}
 		if (39 in keysDown) { // Player holding right
 			this.x += this.speed * modifier;
+			if(this.x > window.innerWidth - this.w) {this.x = window.innerWidth - this.w};
 		}
+
+	},
+
+	backUp: function() {													//implement this by takig back to previous node
+
+		//Move player back off node (for when answered incorrectly)
+		this.x += 0;
+		this.y += 50;
+
 
 	}
 };
@@ -192,7 +281,6 @@ var isAtNode = function() {
 }
 
 //Handle Window resize
-
 window.addEventListener("resize", function () {
 	//resize canvas 
 	canvas.width = window.innerWidth;
@@ -227,63 +315,48 @@ addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode];
 }, false);
 
-// init the game when the player catches a node
-var init = function () {
-
-	//Start Player at a Node / random place on a path
-	player.x = canvas.width / 2;
-	player.y = canvas.height / 2;
-
-};
-
-
-
-
 
 // Update game objects
-var update = function (modifier) {
+var play = function (modifier) {
 
 	//move from keypad input
-	player.move(modifier);
+	if (game.play) {
+		player.move(modifier);
+	
+		//check if we have reached a node
+		check = isAtNode();
 
-	//check if we have reached a node
-	check = isAtNode();
+		if(check && nodes[check.idx].locked) {
+			
+			playMini(nodes[check.idx].name);
 
-	if(check) {
-
-
-		popup("popUpDiv");
-
-		document.getElementById("location").innerHTML = nodes[check.idx].name;
-		var buttons = document.getElementsByTagName("button");
-		var buttonsCount = buttons.length;
-		for (var i = 0; i <= buttonsCount; i += 1) {
-		    buttons[i].onclick = function(e) {
-		        alert(this.id);
-		    };
 		}
 
-		//if correct
-		if(nodes[check.idx].locked) {
-			//locked so unlock it
-			nodes[check.idx].unlock();
+		
+		//check if game over
+		if (numUnlcked == nodes.length) {
+			//game over
+			alert("GAME OVER - COMPLETED");
 		}
-		score.increase();
-
-		// //if incorrect
-		// score.decrease();
-		// //move off node 
-
-		init();
-	}
-
-
-	//check if game over
-	if (numUnlcked == nodes.length) {
-		//game over
-		alert("GAME OVER - COMPLETED");
 	}
 };
+
+//Updates Score and nodes depending on how user performed on minigame
+var update = function(correct) {
+
+	if(correct) {
+
+		nodes[check.idx].unlock(); //note nodes should be locked before doing this
+
+		score.increase();
+	} else {
+		//incorrect 
+		score.decrease();
+
+		//move off node
+		player.backUp();
+	}
+}
 
 // Draw everything
 var render = function () {
@@ -291,9 +364,7 @@ var render = function () {
 		ctx.drawImage(bgImage, 0, 0, window.innerWidth, window.innerHeight);
 	}
 
-	if (playerReady) {
-		ctx.drawImage(playerImage, player.x, player.y, player.w, player.h);
-	}
+
 
 
 	if (nodesReady_lck && nodesReady_unlck) {
@@ -309,20 +380,37 @@ var render = function () {
 		
 	}
 
+	if (playerReady) {
+	ctx.drawImage(playerImage, player.x, player.y, player.w, player.h);
+	}
+
 	// Score
 	ctx.fillStyle = "rgb(5, 5, 5)";
 	ctx.font = "24px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Score: " + score.curr, 32, 32);
+	ctx.fillText("Score: " + score.curr + " Time: " + time.get(), 32, 32);
 };
+
+
+// init the game when the player catches a node
+var init = function () {
+
+	//Start Player at a Node / random place on a path
+	player.x = canvas.width / 2;
+	player.y = canvas.height / 2;
+
+	game.start();
+
+};
+
 
 // The main game loop
 var main = function () {
 	var now = Date.now();
 	var delta = now - then;
 
-	update(delta / 1000);
+	play(delta / 1000);
 	render();
 
 	then = now;

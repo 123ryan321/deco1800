@@ -15,24 +15,35 @@
 
 
 	    <div id="blanket" style="display:none;"></div>
-		<div id="popUpDiv" style="display:none;">
+		<div id="miniGameDiv" style="display:none;">
     		
     		<br><center id = "location">LOCATION</center>
 
     		<p class="question"> A QUESTION ABOUT THIS REGION</p>
 			<ul class="answers">
-			<input type="radio" name="q" value="a" id="A"><label for="A">Incorrect</label><br/>
-			<input type="radio" name="q" value="b" id="B"><label for="B">Incorrect</label><br/>
-			<input type="radio" name="q" value="c" id="C"><label for="C">CORRECT</label><br/>
-			<input type="radio" name="q" value="d" id="D"><label for="D">Incorrect</label><br/>
+			<input type="radio" name="q" value="A" id="A" ><label for="A">Incorrect</label><br/>
+			<input type="radio" name="q" value="B" id="B" ><label for="B">Incorrect</label><br/>
+			<input type="radio" name="q" value="C" id="C" ><label for="C">CORRECT</label><br/>
+			<input type="radio" name="q" value="D" id="D" ><label for="D">Incorrect</label><br/>
 			</ul> 
 
     		<br>
-    		<button id="some_id1">Submit</button>
-			<button id="some_id2">Hint</button>
+    		<button id="submit_but" onclick="submitAns('C')">Submit</button>
+			<button id="hint_but" onclick="hint()">Hint</button>
 
 <!--     		<a href="#" onclick="popup('popUpDiv')" >Click to Close CSS Pop Up</a> -->
 		</div>	
+
+		<div id = "troveInfoDiv" style = "display:none;">
+
+			<br><center id="qCorrect"></center>
+			<br><center>TROVE INFORMATION WILL GO HERE</center>
+
+			<a href="#" onclick="closeTrove()" >Click to Close</a>
+
+		</div>
+
+
 
   		<!-- <a href="#" onclick="popup('popUpDiv')">Click to Open CSS Pop Up</a> -->
 

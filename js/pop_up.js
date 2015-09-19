@@ -56,3 +56,117 @@ function popup(windowname) {
 
 
 
+
+////////////////////////////////////////////////////////
+//					MINI GAME
+////////////////////////////////////////////////////////
+function playMini(name) {
+	//play mini game for 'name' region
+	game.pause();
+
+	popup("miniGameDiv");
+
+	document.getElementById("location").innerHTML = name;
+}
+
+
+//Answer to the mini game has been submitted
+function submitAns(ans) {
+	//Check if it is correct or not
+	if(!isOneChecked("q")) {
+		// No answer submitted
+		alert("Please choose an answer.");
+
+		return;
+
+	} 
+	correct = false;
+
+	if (document.getElementById(ans).checked) {
+		//correct
+		correct = true;
+	} 
+
+	//display some trove stuff
+	displayTrove(correct, ans);
+
+	//update game specs
+	update(correct);
+
+	//close miniGame
+	popup("miniGameDiv");
+	
+}
+
+
+function isOneChecked ( name ) {
+	//returns wheter at least one  check box is checked 
+
+    var checkboxes = document.getElementsByName( name ),
+        i = checkboxes.length - 1;
+
+    for ( ; i > -1 ; i-- ) {
+
+        if ( checkboxes[i].checked ) { return true; }
+
+    }
+
+    return false;
+}
+
+
+function hint() {
+	//display a hint
+	alert("Will Display A Hint here - NOT YET IMPLEMENTED");
+}
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////
+// ----------------- MINI GAME ------------------------
+///////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////
+//					TROVE INFO
+////////////////////////////////////////////////////////
+function displayTrove(correct, ans) {
+
+	//display some trove data
+	popup("troveInfoDiv");
+
+	if (correct) {
+		//correct
+		document.getElementById("qCorrect").innerHTML = "Correct";	
+	} else {
+		//incorrect
+		document.getElementById("qCorrect").innerHTML = "Incorrect" + "<br />" + "the correct answer was " + ans;	
+	}
+	
+
+}
+
+function closeTrove() {
+
+	//close popup
+	popup("troveInfoDiv");
+
+	//resume game 
+	game.resume();
+}
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////
+// ----------------- TROVE INFO ------------------------
+///////////////////////////////////////////////////////
+
