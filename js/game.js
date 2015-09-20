@@ -48,14 +48,6 @@ var scale = {
 }
 
 
-// player image
-var playerReady = false;
-var playerImage = new Image();
-playerImage.onload = function () {
-	playerReady = true;
-};
-playerImage.src = "images/player.png";
-
 // node images
 var nodesReady_lck = false;
 var nodesReady_unlck = false;
@@ -402,12 +394,15 @@ var player = {
 	x: 0,
 	y: 0,
 
-	w: playerImage.width*scale.w,
-	h: playerImage.height*scale.h,
+	w: 0,
+	h: 0,
 
 	init: function(charIdx){
 		//char is the idx sprite we will be using
 		this.sprite = new Sprite("images/player"+charIdx+"_sprite.png",4);
+		this.w = this.sprite.w*scale.w;
+		this.h = this.sprite.h*scale.h;
+
 
 	},
 
