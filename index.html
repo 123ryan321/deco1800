@@ -10,6 +10,9 @@
 	</head>
 	<body>
 
+	<audio id="themeSong" src="1.mp3" preload = "auto">
+	</audio>
+
 
 	    <div id="blanket" style="display:none;"></div>
 		<div id="miniGameDiv" style="display:none;">
@@ -56,7 +59,7 @@
             <li><a href="#" onclick = "displayInstructs()">Instructions</a></li>
         </ul>
 	    
-		<button class="canvas_btn" id="soundBtn">SOUND: ON</button>
+		<button class="canvas_btn" id="soundBtn" onclick = "game.audio.toggle()">SOUND: ON</button>
 
 
 		<!--Custom Confirm Box -->
@@ -66,6 +69,43 @@
 
 			<button id="yes">Yes</button>
 			<button id="cancel">Cancel</button>
+		</div>
+
+		<!--       Game Start (settings)            -->
+		<div id="initGameDiv" style="display: none;">
+			<br><center>GAME SETTINGS</center>
+			<center><div>
+				<br><center>Choose a Character</center>
+				<br>
+				<a href="#" onclick="settings.prev()" id="charArrowLeft">&#10094</a>
+				<img id="character" width="100" height = "60" />
+				<a href="#" onclick="settings.next()" id="charArrowRight">&#10095</a>
+			</div></center>
+
+
+
+			<br><center>Difficulty</center>
+			<br>
+			<center>
+			<input type="radio" name="difficulty" value="Easy" id = "Easy"checked><label for="Easy">Easy</label>
+			<input type="radio" name="difficulty" value="Medium" id = "Med"><label for="Med">Medium</label>
+			<input type="radio" name="difficulty" value="Hard" id = "Hard"><label for="Hard">Hard</label>
+			</center>
+			<br>
+
+			<br><center>Sound</center>
+			<br>
+			<center>
+			<input type="radio" name="soundON" value="On" id = "on"checked><label for="on">ON</label>
+			<input type="radio" name="soundON" value="off" id = "off"checked><label for="off">OFF</label>
+			</center>
+
+			<br>
+			<center>
+			<button id="play" onclick="settings.play()">PLAY</button>
+			<button id= "instructions" onclick="displayInstructs()">
+			INSTRUCTIONS</button>
+			</center>
 		</div>
 
   		

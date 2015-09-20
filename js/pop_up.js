@@ -153,9 +153,6 @@ function hint() {
 ///////////////////////////////////////////////////////
 // ----------------- MINI GAME ------------------------
 ///////////////////////////////////////////////////////
-
-
-
 ////////////////////////////////////////////////////////
 //					TROVE INFO
 ////////////////////////////////////////////////////////
@@ -205,19 +202,10 @@ function displayInstructs(){
 }
 function closeInstructs(){
 	popup("instructionsDiv");
-	game.resume();
-
+	if(game.started) {
+		game.resume();	
+	}
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -225,4 +213,84 @@ function closeInstructs(){
 
 ///////////////////////////////////////////////////////
 // ----------------- INSTRUCTIONS----------------------
+///////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////
+//					INITIAL SETTINGS
+////////////////////////////////////////////////////////
+// var chars = new SpriteDisps(3);
+
+var settings = new function() {
+
+	this.win = "initGameDiv";
+	this.cIdx = 0;	//character index
+
+	this.open =  function() {
+		//open pop up
+		popup(this.win);
+
+		//initialise character image
+		this.change();
+	}
+		
+
+	// init the game when the player catches a node
+	this.play =function() {
+		//close settings window
+		popup(this.win);
+
+		//update values according to settings
+		player.init(this.cIdx);
+		difficulty.level = this.selected("difficulty");
+
+		//sound
+		if(this.selected("soundON") == "on") {
+			game.audio.setON();
+		} else {
+			game.audio.setOFF();
+		}
+
+		game.start();
+	}
+
+	//---------character choices
+	this.prev = function() {
+		//decrease cIdx
+		if(--this.cIdx < 0) {
+			this.cIdx = Characters.numSprites-1;
+		}
+
+		//change image
+		this.change();
+
+	}
+
+	this.next= function(){
+		if(++this.cIdx > Characters.numSprites-1) {
+			this.cIdx = 0;
+		}
+		//change idx
+		this.change();
+
+	}
+
+	this.change = function(){
+		document.getElementById("character").src = Characters.imgs[this.cIdx].src;
+	}
+
+	//-----------Radio Buttons
+	this.selected = function(name){
+		var btns = document.getElementsByName(name);
+		for(i=0; i < btns.length; i++) {
+			if(btns[i].checked){
+				return btns[i].id;
+			}
+		}
+	}
+}
+
+
+
+///////////////////////////////////////////////////////
+// --------------- INITIAL SETTINGS--------------------
 ///////////////////////////////////////////////////////

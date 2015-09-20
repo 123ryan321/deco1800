@@ -102,15 +102,57 @@ var menu = {
 	}
 }
 
-
-
 // Game objects
+var difficulty = {
+	level: "Easy",
+
+	numGames: function(){
+		if (this.level == "Easy") {
+			return 1;
+		} else if (this.level == "Med") {
+			return 2;
+		} else {
+			return 3;
+		}
+	},
+
+	timeOut: function() {
+		//returns timeout of difficulty level
+		if(this.level == "Easy") {
+			return 600000;	//10 mins
+		} else if(this.level == "Med") {
+			return 300000;	//5mins in ms
+		} else {
+			//hard
+			return 120000;	//2mins
+		}
+	}
+}
+
 var game = {
+	started: false,
 	play: false,	//ability to play
-	
+	audio: new Sound("audio/pokemon1"),
+
+	init: function() {
+		time.init();
+
+		//Start Player at a Node / random place on a path
+		player.x = canvas.width / 2;
+		player.y = canvas.height / 2;
+
+		render();
+
+		settings.open();
+
+	},
+
 	start: function() {
+		this.started = true;
 		this.play = true;
 		time.start();
+
+		this.audio.play();
 	
 	},
 
@@ -120,6 +162,7 @@ var game = {
 		//pause timer
 		time.pause();
 		//Sound
+		this.audio.pause();
 	},
 
 	resume: function() {
@@ -129,6 +172,7 @@ var game = {
 		time.resume();
 
 		//SOund
+		this.audio.play();
 	},
 
 	end: function(){
@@ -137,30 +181,60 @@ var game = {
 	}
 }
 
-// function Sound(src) {
-// 	//Note src is without file extension and must have a .mp3 and .ogg in same dir
+function Sound(src) {
+	//Note src is without file extension and must have a .mp3 and .ogg in same dir
+	this.ON = true;
 
-// 	this.s = document.createElement("AUDIO");
+	this.s = document.createElement("AUDIO");
 
-// 	if (this.s.canPlayType("audio/mpeg")) {
+	if (this.s.canPlayType("audio/mpeg")) {
 
-// 		this.s.setAttribute("src", src+".mp3");
-// 	} else {
-// 		this.s.setAttribute("src", src+".ogg");
-// 	}
-// 	document.body.appendChild(this.s);
+		this.s.setAttribute("src", src+".mp3");
+	} else {
+		this.s.setAttribute("src", src+".ogg");
+	}
+	this.s.loop = true;
+	document.body.appendChild(this.s);
 
-// 	//set some attributes
-// 	this.s.loop = true;
+	//set some attributes
+	this.s.loop = true;
 
-// 	this.play = function(){
-// 		this.s.play();
-// 	}
+	this.play = function(){
+		if(this.ON){
+			this.s.play();
+		}
+	}
 
-// 	this.pause = function() {
-// 		this.s.pause();
-// 	}
-// }
+	this.pause = function() {
+		this.s.pause();
+	}
+
+	//also updates settings and displaying functions
+	this.btn = document.getElementById("soundBtn")
+
+	this.setON = function(){
+		this.ON = true;
+		this.play();
+		this.btn.innerHTML = "SOUND: ON";
+	}
+	this.setOFF = function(){
+		this.ON = false;
+		this.pause();
+		this.btn.innerHTML = "SOUND: OFF";
+
+
+	}
+
+	this.toggle = function() {
+		//toggles between on and off (for sound button and settings)
+		
+		if (this.s.paused) {
+			this.setON();
+		} else {
+			this.setOFF();
+		}
+	}
+}
 
 var time = {
 	then: 0, 
@@ -168,6 +242,11 @@ var time = {
 	curr: 0,
 
 	paused: true,
+
+	init: function(){
+		this.curr = 0;
+		this.paused = true;
+	},
 
 	start: function () {
 		this.curr = 0;
@@ -182,15 +261,22 @@ var time = {
 		this.paused = false;
 
 	},
-	get: function(){
+	update: function(){
+		
 		if(!this.paused) {
 			this.now = Date.now();
 			this.curr += this.now - this.then;
 
 			this.then = this.now;	
 		};
+
+		return this.curr;
+	},
+
+	get: function(){
+
 		//convert to MM:SS
-		return msToTime(this.curr);
+		return msToTime(this.update());
 	}
 }
 
@@ -210,10 +296,9 @@ function msToTime(duration) {
 //sprite for player and movements
 function Sprite(imSrc, numFrames) {
 	
-	//Image
+	//sprite sheet
 	this.ready = false;
 	this.img = new Image();
-	
 	this.imgLoad = function() {
 		this.ready = true;
 	}
@@ -288,11 +373,28 @@ function Sprite(imSrc, numFrames) {
 	
 }
 
+var Characters = new function() {
+
+	this.numSprites = 3;
+
+	//display image of sprites
+	this.imgs = new Array(this.numSprites);
+
+	for(i = 0; i < this.numSprites; i++){
+
+		this.imgs[i] = new Image();
+		this.imgs[i].src = "images/player"+i+"_lrg.png";
+	}
+
+}
+
+
+
 
 var player = {
 	
 	//sprite images
-	sprite: new Sprite("images/player_sprite.png", 4),
+	sprite: {}, //new Sprite("images/player0_sprite.png", 4),
 	
 	speed: 150, // movement in pixels per second
 		
@@ -302,6 +404,12 @@ var player = {
 
 	w: playerImage.width*scale.w,
 	h: playerImage.height*scale.h,
+
+	init: function(charIdx){
+		//char is the idx sprite we will be using
+		this.sprite = new Sprite("images/player"+charIdx+"_sprite.png",4);
+
+	},
 
 	move: function(modifier){
 		//move player if keypad input
@@ -480,7 +588,7 @@ var play = function (modifier) {
 
 		
 		//check if game over
-		if (numUnlcked == nodes.length) {
+		if (numUnlcked == nodes.length || time.update() > difficulty.timeOut()) {
 			//game over
 			game.end();
 		}
@@ -551,6 +659,8 @@ var init = function () {
 
 // The main game loop
 var main = function () {
+
+	
 	var now = Date.now();
 	var delta = now - then;
 
@@ -570,5 +680,5 @@ requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame
 
 // Let's play this game!
 var then = Date.now();
-init();
+game.init();
 main();
