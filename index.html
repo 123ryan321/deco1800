@@ -11,9 +11,6 @@
 	<body>
 
 
-		
-
-
 	    <div id="blanket" style="display:none;"></div>
 		<div id="miniGameDiv" style="display:none;">
     		
@@ -43,13 +40,37 @@
 
 		</div>
 
+		<div id = "instructionsDiv" style = "display:none;">
+			<br><center>INSTRUCTIONS</center>
+
+			<center><a href="#" onclick="closeInstructs()">Click to Close</a></center>
+		</div>
+
+		<!--Menu -->
+		<button class="canvas_btn" id="menuBtn">MENU</button>
+
+        <ul id="menu">
+            <li><a href ="#" id="menuPause" onclick = "menu.pauseResume()">Pause</a></li>
+            <li><a href ="#" onclick = "menu.restart()">Restart</a></li>
+            <li><a href="#" onclick = "menu.quit()">Quit</a></li>
+            <li><a href="#" onclick = "displayInstructs()">Instructions</a></li>
+        </ul>
+	    
+		<button class="canvas_btn" id="soundBtn">SOUND: ON</button>
 
 
-  		<!-- <a href="#" onclick="popup('popUpDiv')">Click to Open CSS Pop Up</a> -->
+		<!--Custom Confirm Box -->
+		<div id = "confirmDiv" style = "display: none;">
+			<br><center>CONFIRM BOX</center>
+			<br><center><p id ="info">INFO</p></center>
 
+			<button id="yes">Yes</button>
+			<button id="cancel">Cancel</button>
+		</div>
+
+  		
 
   		<script src="js/game.js"></script>
-  		
 
 	</body>
 </html>

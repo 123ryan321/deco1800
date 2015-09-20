@@ -53,6 +53,30 @@ function popup(windowname) {
 	toggle(windowname);		
 }
 
+//custom confirmBox
+function confirmBox(str, confirmFunc){
+	var win = "confirmDiv";
+
+	game.pause();
+	//open dialog
+	popup(win);
+	document.getElementById("info").innerHTML = str;
+
+	document.getElementById("yes").onclick = function(){
+		
+		confirmFunc();
+			
+		//close
+		popup(win);
+	};
+
+	document.getElementById("cancel").onclick = function(){
+		game.resume();
+		
+		//close
+		popup(win);
+	};
+}
 
 
 
@@ -169,4 +193,36 @@ function closeTrove() {
 ///////////////////////////////////////////////////////
 // ----------------- TROVE INFO ------------------------
 ///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+//					INSTRUCTIONS
+////////////////////////////////////////////////////////
 
+function displayInstructs(){
+	//display instructions
+	game.pause();
+	popup("instructionsDiv");
+
+}
+function closeInstructs(){
+	popup("instructionsDiv");
+	game.resume();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////
+// ----------------- INSTRUCTIONS----------------------
+///////////////////////////////////////////////////////

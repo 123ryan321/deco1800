@@ -76,19 +76,42 @@ nodeWidth = nodeImage_lck.width*scale.w;
 nodeHeight = nodeImage_lck.height*scale.h;
 
 
+//Menu Object
+var menu = {
+	pauseResume: function() {
+		if (game.play){
+			//game is playing pause
+			game.pause();
+			var x = document.getElementById("menuPause");
+			x.innerHTML = "Resume";
+		} else {
+			//resume play
+			game.resume();
+			var x = document.getElementById("menuPause");
+			x.innerHTML = "Pause";
+		}
 
+	},
 
+	restart: function(){
+		confirmBox("Do you want to Restart the game?", init);
+	},
+
+	quit: function() {
+		confirmBox("Are you sure you wish to Quit the game?", game.end);
+	}
+}
 
 
 
 // Game objects
 var game = {
 	play: false,	//ability to play
-
+	
 	start: function() {
 		this.play = true;
 		time.start();
-
+	
 	},
 
 	pause: function() {
@@ -96,6 +119,7 @@ var game = {
 
 		//pause timer
 		time.pause();
+		//Sound
 	},
 
 	resume: function() {
@@ -103,9 +127,40 @@ var game = {
 
 		//restart timer
 		time.resume();
+
+		//SOund
 	},
 
+	end: function(){
+		//end the game
+		alert("GAME OVER - COMPLETED");
+	}
 }
+
+// function Sound(src) {
+// 	//Note src is without file extension and must have a .mp3 and .ogg in same dir
+
+// 	this.s = document.createElement("AUDIO");
+
+// 	if (this.s.canPlayType("audio/mpeg")) {
+
+// 		this.s.setAttribute("src", src+".mp3");
+// 	} else {
+// 		this.s.setAttribute("src", src+".ogg");
+// 	}
+// 	document.body.appendChild(this.s);
+
+// 	//set some attributes
+// 	this.s.loop = true;
+
+// 	this.play = function(){
+// 		this.s.play();
+// 	}
+
+// 	this.pause = function() {
+// 		this.s.pause();
+// 	}
+// }
 
 var time = {
 	then: 0, 
@@ -348,12 +403,13 @@ var score = {
 			this.curr = 0;
 		}
 	}
-};
+}
+
 
 //returns if the player has reached a node
 var isAtNode = function() {
-	w = (nodeWidth  + player.w) / 2;
-	h = (nodeHeight + player.h) / 2;
+	w = (player.w) / 2;
+	h = (player.h) / 2;
 
 
 	for (i = 0; i < nodes.length; i++) {
@@ -426,7 +482,7 @@ var play = function (modifier) {
 		//check if game over
 		if (numUnlcked == nodes.length) {
 			//game over
-			alert("GAME OVER - COMPLETED");
+			game.end();
 		}
 	}
 };

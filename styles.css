@@ -3,6 +3,52 @@
 
 
 
+/*BUTTONS OVER CANVAS*/
+.canvas_btn {
+
+   z-index: 2;
+}
+
+#menuBtn {
+   position: absolute;
+   left: 0;
+   bottom: 0;
+}
+
+#menu {
+   display: none;
+   z-index:2;
+
+   width:15%;
+   padding:5px 0px;
+   position:absolute;
+   bottom:0;
+   left:0px;
+   
+   /*transition:opacity linear 0.15s;*/
+   box-shadow:0px 2px 3px rgba(0,0,0,0.2);
+   background:#2e2728;
+
+}
+
+#menu:hover,
+#menuBtn:focus + #menu {
+   display: block;
+}
+
+#soundBtn {
+   position: absolute;
+   right: 0;
+   bottom: 0;
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -40,3 +86,25 @@
 }
 
 #troveInfoDiv a {position:relative; top:200px; left:20px}
+
+#instructionsDiv {
+   position:absolute;
+   background:url(images/pop-back.jpg) no-repeat;
+   width:400px;
+   height:400px;
+   border:5px solid #000;
+   z-index: 9002;
+}
+
+#instructionsDiv a {position:relative; top:200px; left:20px}
+
+#confirmDiv {
+   position:absolute;
+   background:url(images/pop-back.jpg) no-repeat;
+   width:400px;
+   height:400px;
+   border:5px solid #000;
+   z-index: 9002;
+}
+
+#confirmDiv a {position:relative; top:200px; left:20px}
