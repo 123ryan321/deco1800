@@ -570,13 +570,46 @@ addEventListener("keyup", function (e) {
 }, false);
 
 
+addEventListener("keydown", function (e) { hotKey(e.keyCode)});
+
+//check if ahotkey ha been used
+var hotKey = function(keyCode){
+	
+	switch(keyCode) {
+		case 32:
+			//space bar - pause/resume
+			menu.pauseResume();
+			break;
+		case 81:
+			//'q' - quit game
+			menu.quit();
+			break;
+		case 83:
+			//'s' - toggle sound
+			game.audio.toggle();
+
+			break;
+		case 73:
+			//'i' - display instructrions
+			displayInstructs();
+			break;
+		case 82:
+			//'r' - restart
+			menu.restart();
+			break;
+	}
+}
+
+
 // Update game objects
 var play = function (modifier) {
 
 	//move from keypad input
 	if (game.play) {
+		
 		player.move(modifier);
-	
+
+
 		//check if we have reached a node
 		check = isAtNode();
 
