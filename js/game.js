@@ -128,6 +128,7 @@ var game = {
 
 	init: function() {
 		time.init();
+		score.init();
 
 		//Start Player at a Node / random place on a path
 		player.x = canvas.width / 2;
@@ -170,6 +171,7 @@ var game = {
 	end: function(){
 		//end the game
 		alert("GAME OVER - COMPLETED");
+		displayLeader();
 	}
 }
 
@@ -490,6 +492,11 @@ var score = {
 	mult: 0,	//multiplier
 	add: 10,	//adding score
 	sub: -5,	//subtract for question wrong
+
+	init: function() {
+		this.curr = 0;
+		this.mult = 0;
+	},
 
 	increase: function() {
 		//Increase the score if a node has been passed

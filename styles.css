@@ -1,5 +1,10 @@
 @charset "UTF-8";
 
+/*Screen styles*/
+body {
+   margin: 0;
+   padding: 0;
+}
 
 /*     GAME SETTINGS         */
 
@@ -120,3 +125,14 @@
 }
 
 #initGameDiv a {position:relative; top:200px; left:20px}
+
+#leaderBoardDiv {
+   position:absolute;
+   background:url(images/pop-back.jpg) no-repeat;
+   width:400px;
+   height:400px;
+   border:5px solid #000;
+   z-index: 9001;
+}
+
+#leaderBoardDiv a {position:relative; top:200px; left:20px}
