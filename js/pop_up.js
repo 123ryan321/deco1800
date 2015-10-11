@@ -84,11 +84,17 @@ function confirmBox(str, confirmFunc){
 ////////////////////////////////////////////////////////
 //					MINI GAME
 ////////////////////////////////////////////////////////
+var attemptsLeft;
+
 function playMini(name) {
 	//play mini game for 'name' region
-	game.pause();
+	game.mini_pause();
 
 	popup("miniGameDiv");
+
+	attemptsLeft = difficulty.numAttempts();
+
+	document.getElementById("attempt").innerHTML = attemptsLeft;
 
 	document.getElementById("location").innerHTML = name;
 }
@@ -104,21 +110,42 @@ function submitAns(ans) {
 		return;
 
 	} 
-	correct = false;
+	
 
 	if (document.getElementById(ans).checked) {
 		//correct
-		correct = true;
-	} 
 
-	//display some trove stuff
-	displayTrove(correct, ans);
+		//update game specs
+		update(true);
 
-	//update game specs
-	update(correct);
+		//display outcome
+		displayOutcome(true);
 
-	//close miniGame
-	popup("miniGameDiv");
+		//close miniGame
+		popup("miniGameDiv");
+
+	}  else {
+		//incorrect
+		
+		//Update number of attempts
+		attemptsLeft --;
+		document.getElementById("attempt").innerHTML = attemptsLeft;
+
+		update(false, attemptsLeft);
+
+		//display outcome
+		displayOutcome(false, attemptsLeft, ans);
+
+		if(attemptsLeft <= 0) {
+
+			//close mini game
+			popup("miniGameDiv");
+
+
+		}
+	}
+
+
 	
 }
 
@@ -154,20 +181,52 @@ function hint() {
 // ----------------- MINI GAME ------------------------
 ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
+//					MINIGAME OUTCOME
+////////////////////////////////////////////////////////
+function displayOutcome(correct, attemptsLeft, ans) {
+
+	//display outcome
+	popup("outcomeDiv");
+
+	
+	if(correct) {
+		document.getElementById("outcomeText").innerHTML = "Correct Answer";
+	} else {
+		if(attemptsLeft > 0) {
+			document.getElementById("outcomeText").innerHTML = "Incorrect, Try again" + "<br />" + attemptsLeft + "attempts Left";
+		} else {
+			document.getElementById("outcomeText").innerHTML = "Incorrect" + "<br />" + "the correct answer was " + ans;	
+		}
+	}
+
+}
+function closeOutcome() {
+
+	popup("outcomeDiv");
+
+	//resume game 
+	game.resume();
+}
+
+///////////////////////////////////////////////////////
+// ----------------- MINIGAME OUTCOME------------------
+///////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////
 //					TROVE INFO
 ////////////////////////////////////////////////////////
-function displayTrove(correct, ans) {
+function displayTrove() {
 
 	//display some trove data
 	popup("troveInfoDiv");
 
-	if (correct) {
-		//correct
-		document.getElementById("qCorrect").innerHTML = "Correct";	
-	} else {
-		//incorrect
-		document.getElementById("qCorrect").innerHTML = "Incorrect" + "<br />" + "the correct answer was " + ans;	
-	}
+	//move player off node
+	player.moveOff(true);
+	
+	//pause game
+	game.pause();
+
+
 	
 
 }

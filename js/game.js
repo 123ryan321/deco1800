@@ -98,13 +98,13 @@ var menu = {
 var difficulty = {
 	level: "Easy",
 
-	numGames: function(){
+	numAttempts: function(){
 		if (this.level == "Easy") {
-			return 1;
+			return 3;
 		} else if (this.level == "Med") {
 			return 2;
 		} else {
-			return 3;
+			return 1;
 		}
 	},
 
@@ -165,6 +165,19 @@ var game = {
 		time.resume();
 
 		//SOund
+		this.audio.play();
+	},
+
+	mini_pause: function () {
+		//Use to pause when mini game pops up
+		this.play = false;
+
+		this.audio.pause();
+
+	},
+
+	mini_resume: function() {
+		this.play = true;
 		this.audio.play();
 	},
 
@@ -309,6 +322,10 @@ function Sprite(imSrc, numFrames) {
 	this.dir = "down"; 
 	this.x = 0;
 	this.y = 0;
+	
+	//step iterator - only update sprite evry nSteps
+	this.nSteps = 5;
+	this.itSteps = 0;	//initialise iterator
 		
 	//Sprite sheet to be set up  with rows in order below (from top to bottom)
 	this.down = function(){
@@ -320,6 +337,8 @@ function Sprite(imSrc, numFrames) {
 			this.x = 0;
 			this.y = 0;
 			this.dir = "down";
+
+			this.itSteps = 0; //initiate number of steps
 		}
 	};
 	
@@ -332,6 +351,8 @@ function Sprite(imSrc, numFrames) {
 			this.x = 0;
 			this.y = this.h;
 			this.dir = "left";
+
+			this.itSteps = 0; //initiate number of steps
 		}
 	};
 	
@@ -344,6 +365,8 @@ function Sprite(imSrc, numFrames) {
 			this.x = 0;
 			this.y = 2*this.h;
 			this.dir = "right";
+
+			this.itSteps = 0; //initiate number of steps
 		}
 	};
 	
@@ -356,13 +379,24 @@ function Sprite(imSrc, numFrames) {
 			this.x = 0;
 			this.y = 3*this.h;
 			this.dir = "up";
+
+			this.itSteps = 0; //initiate number of steps
 		}
 	};
 	
 	this.next = function(){ 
-		//increment frame in same direction
-		this.x += this.w;
-		if(this.x > this.img.width) {this.x = 0}; // return to starting sprite
+		//incremeent number of steps & change sprite if theres enough
+		
+
+		if(++this.itSteps > this.nSteps) {
+
+			//increment frame in same direction
+			this.x += this.w;
+			if(this.x >= this.img.width) {this.x = 0}; // return to starting sprite	
+
+			//restart step count
+			this.itSteps = 0;
+		}
 	};
 	
 }
@@ -408,28 +442,31 @@ var player = {
 
 	},
 
+
 	move: function(modifier){
+		modifier *= this.speed;
+
 		//move player if keypad input
 		if (38 in keysDown) { // Player holding up
-			this.y -= this.speed * modifier;
+			this.y -= modifier;
 			if (this.y < 0) {this.y = 0};	//check bdry
 			
 			player.sprite.up();	//update sprite
 		}
 		if (40 in keysDown) { // Player holding down
-			this.y += this.speed * modifier;
+			this.y += modifier;
 			if (this.y > window.innerHeight - this.h) {this.y = window.innerHeight - this.h}; //check bdry
 			
 			player.sprite.down(); //update sprite
 		}
 		if (37 in keysDown) { // Player holding left
-			this.x -= this.speed * modifier;
-			if(this.x < 0) {this.x = 0}; //check bdry
+			this.x -= modifier;
+			if(this.x < 0) {this.x = 0}; 
 			
 			player.sprite.left(); //update sprite
 		}
 		if (39 in keysDown) { // Player holding right
-			this.x += this.speed * modifier;
+			this.x += modifier;
 			if(this.x > window.innerWidth - this.w) {this.x = window.innerWidth - this.w}; //check bdry
 			
 			player.sprite.right(); //update sprite
@@ -437,12 +474,49 @@ var player = {
 
 	},
 
-	backUp: function() {													//implement this by takig back to previous node
+	moveOff: function(fwd) {													//implement this by takig back to previous node
+		//Move play off node
+		dir = player.sprite.dir;
 
-		//Move player back off node (for when answered incorrectly)
-		this.x += 0;
-		this.y += 50;
 
+		if (fwd) {
+			//move off in same direction as the player reached the node
+			// ie unlocked node
+			player.mvByDir(dir);
+
+
+		} else {
+			//move off backwards (ie incorrect)
+			player.mvByDir(player.oppositeDir(dir));
+
+		}
+
+
+	},
+	
+	mvByDir: function(dir, modifier) {
+		//NOTE not checking - function only to be used when player will not exceed bdrys
+		dist = nodeWidth;
+
+		if (dir == "up") { 
+			this.y -= dist;
+		}
+		if (dir == "down") { 
+			this.y += dist;
+		}
+		if (dir == "left") { 
+			this.x -= dist;
+		}
+		if (dir == "right") { 
+			this.x += dist;
+		}
+	},
+
+	oppositeDir: function(dir) {
+		if(dir == "up") return "down";
+		if(dir == "down") return "up";
+		if(dir == "left") return "right";
+		if(dir == "right") return "left";
 
 	}
 };
@@ -615,9 +689,15 @@ var play = function (modifier) {
 		//check if we have reached a node
 		check = isAtNode();
 
-		if(check && nodes[check.idx].locked) {
-			
-			playMini(nodes[check.idx].name);
+		if(check) {
+			// at a node
+			if (nodes[check.idx].locked) {
+				//locked node 
+				playMini(nodes[check.idx].name);
+			} else {
+				//unlocked node - display info
+				displayTrove();
+			}
 
 		}
 
@@ -631,19 +711,26 @@ var play = function (modifier) {
 };
 
 //Updates Score and nodes depending on how user performed on minigame
-var update = function(correct) {
+var update = function(correct, attemptsLeft) {
 
 	if(correct) {
 
 		nodes[check.idx].unlock(); //note nodes should be locked before doing this
 
 		score.increase();
+
+		//moveOff node
+		player.moveOff(true);
+
+
 	} else {
 		//incorrect 
 		score.decrease();
 
-		//move off node
-		player.backUp();
+		if(attemptsLeft <= 0) {
+			//move off node
+			player.moveOff(false);
+		}
 	}
 }
 

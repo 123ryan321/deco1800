@@ -13,11 +13,13 @@
 	<audio id="themeSong" src="1.mp3" preload = "auto">
 	</audio>
 
-
+		<!-- MINI GAME -->
 	    <div id="blanket" style="display:none;"></div>
 		<div id="miniGameDiv" style="display:none;">
     		
     		<br><center id = "location">LOCATION</center>
+
+    		<p >Attempts left <u id= "attempt">3</u></p>
 
     		<p class="question"> A QUESTION ABOUT THIS REGION</p>
 			<ul class="answers">
@@ -32,7 +34,16 @@
 			<button id="hint_but" onclick="hint()">Hint</button>
 
 <!--     		<a href="#" onclick="popup('popUpDiv')" >Click to Close CSS Pop Up</a> -->
-		</div>	
+		</div>
+
+		<!-- OUTCOME  -->
+		<div id = "outcomeDiv" style = "display:none;">
+
+			<br><center id="outcomeText"></center>
+			
+			<a href="#" onclick="closeOutcome()" >Click to Close</a>
+
+		</div>
 
 		<div id = "troveInfoDiv" style = "display:none;">
 
