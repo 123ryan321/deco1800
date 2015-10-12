@@ -17,6 +17,11 @@ document.body.appendChild(canvas);
 var bgReady = false;
 var bgImage = new Image();
 bgImage.onload = function () {
+	
+	scale.prevW = bgImage.width;
+	scale.prevH = bgImage.height;
+	scale.update();
+	scaleNodes();
 	bgReady = true;
 };
 bgImage.src = "images/background.jpg";
@@ -26,16 +31,18 @@ bgImage.src = "images/background.jpg";
 var scale = {
 
 	//for pos
-	prevW: window.innerWidth,
-	prevH: window.innerHeight,
+	prevW:0,
+	prevH:0,
 	x: 0,
 	y: 0,
-	
-	//image width and height
-	w: window.innerWidth/bgImage.width,
-	h: window.innerHeight/bgImage.height,
 
+	w: window.innerWidth,
+	h: window.innerHeight,
+
+	
 	update: function() {
+
+
 		this.w = window.innerWidth/bgImage.width;
 		this.h = window.innerHeight/bgImage.height;
 
@@ -44,6 +51,8 @@ var scale = {
 
 		this.prevW = window.innerWidth;
 		this.prevH = window.innerHeight;
+
+	
 	}
 }
 
@@ -73,6 +82,73 @@ nodeImage_info.src = "images/node_unlck.jpg";
 
 nodeWidth = nodeImage_lck.width*scale.w;
 nodeHeight = nodeImage_lck.height*scale.h;
+
+var numUnlcked = 0;	//number of unlocked nodes
+
+function Node (name, x, y) {
+	this.name = name;
+	this.x = x; 
+	this.y = y;
+
+
+
+	this.locked = true;
+	this.unlock = function() {
+		this.locked = false;
+		//change the image too
+
+		//update number of unlocked
+		++numUnlcked;
+	}
+};
+
+var nodes = [
+	new Node("QLD_sth", 975, 350),
+	new Node("QLD_nth", 860, 150),
+	new Node("NSW", 900, 550),
+	new Node("ACT", 970, 610),
+	new Node("VIC", 800, 720),
+	new Node("TAS", 850, 860),
+	new Node("SA", 510, 500),
+	new Node("WA", 150, 500),
+	new Node("NT", 560, 250),
+	];
+
+function InfoNode (x,y) {
+	this.x = x;
+	this.y = y;
+}
+
+var nodes_info = [
+	new InfoNode(900, 400),
+	new InfoNode(200, 400),
+	new InfoNode(500, 400),
+	];
+
+var scaleNodes = function() {
+
+	nodeWidth = nodeImage_lck.width*scale.w;
+	nodeHeight = nodeImage_lck.height*scale.h;
+
+	for (i = 0; i < nodes.length; i++) {
+		//Position
+		nodes[i].x *= scale.x;
+		nodes[i].y *= scale.y;
+		//Size
+		nodes[i].w *= scale.w;
+		nodes[i].h *= scale.h;
+	}
+
+	for(i = 0; i < nodes_info.length; i ++) {
+		//Position
+		nodes_info[i].x *= scale.x;
+		nodes_info[i].y *= scale.y;
+
+		//Size
+		nodes_info[i].w *= scale.w;
+		nodes_info[i].h *= scale.h;
+	}
+}		
 
 
 //Menu Object
@@ -141,7 +217,7 @@ var game = {
 		player.x = canvas.width / 2;
 		player.y = canvas.height / 2;
 
-		render();
+		// render();
 
 		settings.open();
 
@@ -313,17 +389,27 @@ function Sprite(imSrc, numFrames) {
 	//sprite sheet
 	this.ready = false;
 	this.img = new Image();
-	this.imgLoad = function() {
-		this.ready = true;
+	
+	var sprite = this;
+
+	this.img.onload = function() {
+		sprite.ready = true;
+		// Sprite.down();
+		sprite.w = this.width/numFrames;	//width of sprite (const)
+		sprite.h = this.height/4;	//height of sprite (const)
+
+		//update player
+		player.w_init = sprite.w;
+		player.h_init = sprite.h;
+
+		player.w =  player.w_init * scale.w;
+		player.h = player.h_init * scale.h;
 	}
-	this.img.onload = this.imgLoad();
-	
-	
+
 	this.img.src = imSrc;
 		
 	this.numFrames = numFrames;	//per direction
-	this.w = this.img.width/numFrames;	//width of sprite (const)
-	this.h = this.img.height/4;	//height of sprite (const)
+
 	
 	//Start sprite facing downwards
 	this.dir = "down"; 
@@ -437,16 +523,15 @@ var player = {
 	x: 0,
 	y: 0,
 
+	w_init: 0,
+	h_init: 0,
+
 	w: 0,
 	h: 0,
 
 	init: function(charIdx){
 		//char is the idx sprite we will be using
 		this.sprite = new Sprite("images/player"+charIdx+"_sprite.png",4);
-		this.w = this.sprite.w*scale.w;
-		this.h = this.sprite.h*scale.h;
-
-
 	},
 
 
@@ -489,32 +574,40 @@ var player = {
 		if (fwd) {
 			//move off in same direction as the player reached the node
 			// ie unlocked node
-			player.mvByDir(dir);
+			player.mvByDir(dir, true);
 
 
 		} else {
 			//move off backwards (ie incorrect)
-			player.mvByDir(player.oppositeDir(dir));
+			player.mvByDir(player.oppositeDir(dir), false);
 
 		}
 
 
 	},
 	
-	mvByDir: function(dir) {
+	mvByDir: function(dir, fwd) {
 		//NOTE not checking - function only to be used when player will not exceed bdrys
-		
+		//shift values
+		h = this.h;
+		w = this.w;
+
+		if (fwd) {
+			h += nodeHeight;
+			w += nodeWidth;
+		}
+
 		if (dir == "up") { 
-			this.y -= nodeHeight + this.h;
+			this.y -= h;
 		}
 		if (dir == "down") { 
-			this.y += nodeHeight + this.h;
+			this.y += h;
 		}
 		if (dir == "left") { 
-			this.x -= nodeWidth + this.w;
+			this.x -= w;
 		}
 		if (dir == "right") { 
-			this.x += nodeWidth + this.w;
+			this.x += w;
 		}
 	},
 
@@ -527,60 +620,7 @@ var player = {
 	}
 };
 
-var numUnlcked = 0;	//number of unlocked nodes
 
-function Node (name, x, y) {
-	this.name = name;
-	this.x = x; 
-	this.y = y;
-
-
-
-	this.locked = true;
-	this.unlock = function() {
-		this.locked = false;
-		//change the image too
-
-		//update number of unlocked
-		++numUnlcked;
-	}
-};
-
-var nodes = [
-	new Node("QLD_sth", 975 * scale.w, 350 * scale.h),
-	new Node("QLD_nth", 860  * scale.w, 150 * scale.h),
-	new Node("NSW", 900 * scale.w, 550 * scale.h),
-	new Node("ACT", 970 * scale.w, 610 * scale.h),
-	new Node("VIC", 800 * scale.w, 720 * scale.h),
-	new Node("TAS", 850 * scale.w, 860 * scale.h),
-	new Node("SA", 510 * scale.w, 500 * scale.h),
-	new Node("WA", 150 * scale.w, 500 * scale.h),
-	new Node("NT", 560 * scale.w, 250 * scale.h),
-	];
-
-function InfoNode (x,y) {
-	this.x = x;
-	this.y = y;
-}
-
-var nodes_info = [
-	new InfoNode(900*scale.w, 400 *scale.h),
-	new InfoNode(200*scale.w, 400 *scale.h),
-	new InfoNode(500*scale.w, 400 *scale.h),
-	];
-
-var scaleNodes = function() {
-
-	for (i = 0; i < nodes.length; i++) {
-		nodes[i].x *= scale.x;
-		nodes[i].y *= scale.y;
-	}
-
-	for(i = 0; i < nodes_info.length; i ++) {
-		nodes_info[i].x *= scale.x;
-		nodes_info[i].y *= scale.y;
-	}
-}		
 
 var score = {
 	curr: 0,
@@ -661,18 +701,17 @@ window.addEventListener("resize", function () {
 
 	//resize images
 	scale.update();
+	if(player.sprite.ready) {
+		player.w = (player.w_init)*scale.w;
+		player.h = (player.h_init)*scale.h;
+	}
 
-	player.w = playerImage.width*scale.w;
-	player.h = playerImage.height*scale.h;
 
 	//update player posistion 
 	player.x *= scale.x;
 	player.y *= scale.y;
 
-	nodeWidth = nodeImage_lck.width*scale.w;
-	nodeHeight = nodeImage_lck.height*scale.h;
-
-	//scale Nodes
+	// //scale Nodes
 	scaleNodes();
 });
 
@@ -787,31 +826,35 @@ var update = function(correct, attemptsLeft) {
 var render = function () {
 	if (bgReady) {
 		ctx.drawImage(bgImage, 0, 0, window.innerWidth, window.innerHeight);
-	}
-
-	if (nodesReady_lck && nodesReady_unlck) {
-		for(i = 0; i < nodes.length ; i ++) {
-			if (nodes[i].locked) {
-				//draw locked image
-				ctx.drawImage(nodeImage_lck, nodes[i].x, nodes[i].y, nodeWidth, nodeHeight);
-			} else {
-				//draw unlocked image
-				ctx.drawImage(nodeImage_unlck, nodes[i].x, nodes[i].y, nodeWidth, nodeHeight);
-			}		
-		}
-		
-	}
-
-	if(nodesReady_info) {
-		//information nodes
-		for(i =0 ; i < nodes_info.length; i ++) {
-			ctx.drawImage(nodeImage_info, nodes_info[i].x, nodes_info[i].y, nodeWidth, nodeHeight);
-		}
-		
-	}
 	
-	if (player.sprite.ready) {
-		ctx.drawImage(player.sprite.img,  player.sprite.x, player.sprite.y, player.sprite.w, player.sprite.h, player.x, player.y, player.w, player.h);
+		//scale depend on bg will only draw everything else if background is ready
+
+		if (nodesReady_lck && nodesReady_unlck) {
+
+
+			for(i = 0; i < nodes.length ; i ++) {
+				if (nodes[i].locked) {
+					//draw locked image
+					ctx.drawImage(nodeImage_lck, nodes[i].x, nodes[i].y, nodeWidth, nodeHeight);
+				} else {
+					//draw unlocked image
+					ctx.drawImage(nodeImage_unlck, nodes[i].x, nodes[i].y, nodeWidth, nodeHeight);
+				}		
+			}
+			
+		} 
+
+		if(nodesReady_info) {
+			//information nodes
+			for(i =0 ; i < nodes_info.length; i ++) {
+				ctx.drawImage(nodeImage_info, nodes_info[i].x, nodes_info[i].y, nodeWidth, nodeHeight);
+			}
+			
+		} 
+
+		if (player.sprite.ready) {
+			ctx.drawImage(player.sprite.img,  player.sprite.x, player.sprite.y, player.sprite.w, player.sprite.h, player.x, player.y, player.w, player.h);
+		} 
 	}
 
 	// Score

@@ -92,6 +92,8 @@ function playMini(name) {
 
 	popup("miniGameDiv");
 
+	uncheckButs();
+
 	attemptsLeft = difficulty.numAttempts();
 
 	document.getElementById("attempt").innerHTML = attemptsLeft;
@@ -99,6 +101,14 @@ function playMini(name) {
 	document.getElementById("location").innerHTML = name;
 }
 
+function uncheckButs() {
+	//uncheck all the radio buttons
+	buts = document.getElementsByName("q")
+
+	for(i = 0; i <buts.length; i ++) {
+		buts[i].checked = false;
+	}
+}
 
 //Answer to the mini game has been submitted
 function submitAns(ans) {
@@ -118,6 +128,7 @@ function submitAns(ans) {
 		//update game specs
 		update(true);
 
+		attemptsLeft = -1;		//so when closed game will resume
 		//display outcome
 		displayOutcome(true);
 
@@ -144,9 +155,6 @@ function submitAns(ans) {
 
 		}
 	}
-
-
-	
 }
 
 
@@ -188,16 +196,19 @@ function displayOutcome(correct, attemptsLeft, ans) {
 	//display outcome
 	popup("outcomeDiv");
 
-	
 	if(correct) {
 		document.getElementById("outcomeText").innerHTML = "Correct Answer";
 	} else {
+
 		if(attemptsLeft > 0) {
 			document.getElementById("outcomeText").innerHTML = "Incorrect, Try again" + "<br />" + attemptsLeft + "attempts Left";
 		} else {
-			document.getElementById("outcomeText").innerHTML = "Incorrect" + "<br />" + "the correct answer was " + ans;	
+			document.getElementById("outcomeText").innerHTML = "Incorrect" + "<br />" + "the correct answer was " + ans;
+
 		}
 	}
+
+
 
 }
 function closeOutcome() {
@@ -205,7 +216,10 @@ function closeOutcome() {
 	popup("outcomeDiv");
 
 	//resume game 
-	game.resume();
+	if(attemptsLeft <= 0) {
+		game.resume();	
+	}
+	
 }
 
 ///////////////////////////////////////////////////////
@@ -293,7 +307,6 @@ var settings = new function() {
 	}
 		
 
-	// init the game when the player catches a node
 	this.play =function() {
 		//close settings window
 		popup(this.win);
