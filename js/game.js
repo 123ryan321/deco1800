@@ -51,9 +51,11 @@ var scale = {
 // node images
 var nodesReady_lck = false;
 var nodesReady_unlck = false;
+var nodesReady_info = false;
 
 var nodeImage_lck = new Image();
 var nodeImage_unlck = new Image();
+var nodeImage_info = new Image();
 
 nodeImage_lck.onload = function () {
 	nodesReady_lck = true;
@@ -61,8 +63,13 @@ nodeImage_lck.onload = function () {
 nodeImage_unlck.onload = function () {
 	nodesReady_unlck = true;
 };
+nodeImage_info.onload = function() {
+	nodesReady_info = true;
+};
+
 nodeImage_lck.src = "images/node_lck.jpg";
 nodeImage_unlck.src = "images/node_unlck.jpg";
+nodeImage_info.src = "images/node_unlck.jpg";
 
 nodeWidth = nodeImage_lck.width*scale.w;
 nodeHeight = nodeImage_lck.height*scale.h;
@@ -494,21 +501,20 @@ var player = {
 
 	},
 	
-	mvByDir: function(dir, modifier) {
+	mvByDir: function(dir) {
 		//NOTE not checking - function only to be used when player will not exceed bdrys
-		dist = nodeWidth;
-
+		
 		if (dir == "up") { 
-			this.y -= dist;
+			this.y -= nodeHeight + this.h;
 		}
 		if (dir == "down") { 
-			this.y += dist;
+			this.y += nodeHeight + this.h;
 		}
 		if (dir == "left") { 
-			this.x -= dist;
+			this.x -= nodeWidth + this.w;
 		}
 		if (dir == "right") { 
-			this.x += dist;
+			this.x += nodeWidth + this.w;
 		}
 	},
 
@@ -552,12 +558,27 @@ var nodes = [
 	new Node("NT", 560 * scale.w, 250 * scale.h),
 	];
 
+function InfoNode (x,y) {
+	this.x = x;
+	this.y = y;
+}
+
+var nodes_info = [
+	new InfoNode(900*scale.w, 400 *scale.h),
+	new InfoNode(200*scale.w, 400 *scale.h),
+	new InfoNode(500*scale.w, 400 *scale.h),
+	];
 
 var scaleNodes = function() {
 
 	for (i = 0; i < nodes.length; i++) {
 		nodes[i].x *= scale.x;
 		nodes[i].y *= scale.y;
+	}
+
+	for(i = 0; i < nodes_info.length; i ++) {
+		nodes_info[i].x *= scale.x;
+		nodes_info[i].y *= scale.y;
 	}
 }		
 
@@ -592,18 +613,40 @@ var score = {
 
 //returns if the player has reached a node
 var isAtNode = function() {
-	w = (player.w) / 2;
-	h = (player.h) / 2;
+	w = (nodeWidth) / 2;
+	h = (nodeHeight) / 2;
+
+	pw = player.w/4;
+	ph = player.h/2;
 
 
 	for (i = 0; i < nodes.length; i++) {
-		if (player.x <= (nodes[i].x + w) && nodes[i].x <= (player.x + w)
-			&& player.y <= (nodes[i].y + h) && nodes[i].y <= (player.y + h)) 	{
+		if (player.x - pw <= (nodes[i].x + w) && player.x + pw >= (nodes[i].x - w)
+			&& player.y - ph <= (nodes[i].y + h) && player.y + ph >= (nodes[i].y - h)) 	{
 			
 			return {
 				bool: true,
 				idx: i,
 			}
+		}
+	}
+
+	return false;
+}
+
+//returns if player has reached an info node
+var isAtInfo = function() {
+	w = (nodeWidth)/2;
+	h = (nodeHeight)/2;
+
+	pw = player.w/4;
+	ph = player.h/2;
+
+	for (i = 0; i < nodes_info.length; i++) {
+		if (player.x - pw <= (nodes_info[i].x + w) && player.x + pw >= (nodes_info[i].x - w)
+			&& player.y - ph <= (nodes_info[i].y + h) && player.y + ph >= (nodes_info[i].y - h)) 	{
+			
+			return true;
 		}
 	}
 
@@ -701,6 +744,12 @@ var play = function (modifier) {
 
 		}
 
+		//check if we've reached an info node
+		if(isAtInfo()) {
+			//display trove info
+			displayTrove();
+		}
+
 		
 		//check if game over
 		if (numUnlcked == nodes.length || time.update() > difficulty.timeOut()) {
@@ -752,7 +801,14 @@ var render = function () {
 		}
 		
 	}
-	
+
+	if(nodesReady_info) {
+		//information nodes
+		for(i =0 ; i < nodes_info.length; i ++) {
+			ctx.drawImage(nodeImage_info, nodes_info[i].x, nodes_info[i].y, nodeWidth, nodeHeight);
+		}
+		
+	}
 	
 	if (player.sprite.ready) {
 		ctx.drawImage(player.sprite.img,  player.sprite.x, player.sprite.y, player.sprite.w, player.sprite.h, player.x, player.y, player.w, player.h);
