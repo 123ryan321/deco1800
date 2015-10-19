@@ -52,7 +52,7 @@ function popup(windowname) {
 	toggle('blanket');
 	toggle(windowname);		
 }
-
+///////////////////////////////////////////////////////////
 //custom confirmBox
 function confirmBox(str, confirmFunc){
 	var win = "confirmDiv";
@@ -78,18 +78,51 @@ function confirmBox(str, confirmFunc){
 	};
 }
 
+//custom Alert box
+function alertBox(str) {
 
+	var win = "alertDiv";
+
+	//open dialog
+	popup(win);
+	document.getElementById("alertInfo").innerHTML = str;
+
+	document.getElementById("alertOk").onclick = function(){
+		
+		//close
+		popup(win);
+
+	};
+
+}
 
 
 ////////////////////////////////////////////////////////
 //					MINI GAME
 ////////////////////////////////////////////////////////
 var attemptsLeft;
+var currQ;
 
-function playMini(name) {
-	//play mini game for 'name' region
+
+function playMini(node) {
+	//play mini game for give Node
 	game.mini_pause();
 
+	//node info
+	name = node.name;
+
+	//set up game
+	//set Question and answers
+	console.log(node);
+	console.log(node.questions);
+
+	currQ = setQuestion(node.questions);
+	console.log (currQ);
+
+	//set image
+	setImg(currQ.key);
+
+	//open dialog
 	popup("miniGameDiv");
 
 	uncheckButs();
@@ -111,11 +144,14 @@ function uncheckButs() {
 }
 
 //Answer to the mini game has been submitted
-function submitAns(ans) {
+function submitAns() {
+	
+	var ans = currQ.corr;
+
 	//Check if it is correct or not
 	if(!isOneChecked("q")) {
 		// No answer submitted
-		alert("Please choose an answer.");
+		alertBox("Please choose an answer.");
 
 		return;
 
@@ -128,7 +164,7 @@ function submitAns(ans) {
 		//update game specs
 		update(true);
 
-		attemptsLeft = -1;		//so when closed game will resume
+		attemptsLeft = -1;		//so when closed, game will resume
 		//display outcome
 		displayOutcome(true);
 
@@ -145,7 +181,7 @@ function submitAns(ans) {
 		update(false, attemptsLeft);
 
 		//display outcome
-		displayOutcome(false, attemptsLeft, ans);
+		displayOutcome(false, attemptsLeft, currQ.corrAns);
 
 		if(attemptsLeft <= 0) {
 
@@ -174,13 +210,58 @@ function isOneChecked ( name ) {
 }
 
 
-function hint() {
-	//display a hint
-	alert("Will Display A Hint here - NOT YET IMPLEMENTED");
+
+//Set the image in the question dialog with an image from trove
+function setImg(keyword){
+
+
+        var apiKey = "jsk1qqntnrj7qbvf";
+
+        //create searh query
+        var url = "http://api.trove.nla.gov.au/result?key=" + apiKey + "&l-availability=y%2Ff&encoding=json&zone=picture" + "&sortby=relevance&n=20&q=" + keyword + "&callback=?";
+
+        //get the JSON information we need to display the images
+        $.getJSON(url, function(data) {
+
+            //get a random picture
+            var picNum = Math.floor(Math.random()*20);
+
+            var imUrl = data.response.zone[0].records.work[picNum].identifier[1].value;
+            
+            document.getElementById("qImg").src = imUrl;
+            
+
+        });
 }
 
+function setQuestion(questions) {
+	//randomly select a question for the current node and update dialog
+	// - return correct answer position & search keyword
+	var qNum = Math.floor(Math.random()*(questions.length));
+	
+	var Q = questions[qNum];
+
+	document.getElementById("question").innerHTML = Q.q;
+	document.getElementById("labA").innerHTML = Q.ansA;
+	document.getElementById("labB").innerHTML = Q.ansB;
+	document.getElementById("labC").innerHTML = Q.ansC;
+	document.getElementById("labD").innerHTML = Q.ansD;
+
+	//correct answer
+	var ans;
+	switch(Q.corr) {
+		case "A": ans = Q.ansA; break;
+		case "B": ans = Q.ansB; break;
+		case "C": ans = Q.ansC; break;
+		case "D": ans = Q.ansD; break;
+	}
 
 
+	return { key: Q.keyword,
+			 corr: Q.corr,
+			 corrAns: ans,
+			}
+}
 
 
 
@@ -371,6 +452,7 @@ var settings = new function() {
 ////////////////////////////////////////////////////////
 function displayLeader () {
 	game.pause();
+	document.getElementById("finalScore").innerHTML = "Your Score" + score.curr;
 	popup("leaderBoardDiv");
 
 }

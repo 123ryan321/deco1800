@@ -165,7 +165,7 @@ a {
 
 #confirmDiv {
    position:absolute;
-   background:url(images/pop-back.jpg) no-repeat;
+   background:#bebebe;
    width:400px;
    height:400px;
    border:5px solid #3c3c3c;
@@ -173,6 +173,17 @@ a {
 }
 
 #confirmDiv a {position:relative; top:200px;}
+
+#alertDiv {
+   position:absolute;
+   background:#bebebe;
+   width:400px;
+   height:400px;
+   border:5px solid #3c3c3c;
+   z-index: 9002;
+}
+
+#alertDiv a {position:relative; top:200px;}
 
 
 #initGameDiv {
@@ -197,7 +208,7 @@ a {
    height:750px;
    border:7.5px solid #3c3c3c;
    border-radius:5px;
-   z-index: 9002;
+   z-index: 9000;
    margin: -200px 0 0 -350px;
 }
 
@@ -205,7 +216,6 @@ a {
 
 #outcomeDiv {
    position:absolute;
-<<<<<<< HEAD
    background:#bebebe;
    width:600px;
    height:450px;
@@ -215,13 +225,6 @@ a {
    top: 50%;
    left: 50%;
    margin: -50px 0 0 -150px;
-=======
-   background:url(images/pop-back.jpg) no-repeat;
-   width:400px;
-   height:400px;
-   border:5px solid #000;
-   z-index: 9002;
->>>>>>> 33b521b131c361c0f1de36e27b84f0d7b7f9c4dd
 }
 
 #outcomeDiv a {position:relative; top:200px;}

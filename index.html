@@ -4,6 +4,8 @@
 		<meta charset="utf-8">
 		<title>The Australian Race</title>
 
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
 		<link href="styles.css" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="js/pop_up.js"></script>
 
@@ -21,18 +23,19 @@
 
     		<br><p>Attempts Remaining:<b id= "attempt">3</b></p>
 
-    		<p class="question">Basic Question?</p>
+    		<p class="question" id ="question">Basic Question?</p>
 			<ul class="answers">
-			<input type="radio" name="q" value="A" id="A" ><label for="A">Incorrect</label><br/>
-			<input type="radio" name="q" value="B" id="B" ><label for="B">Incorrect</label><br/>
-			<input type="radio" name="q" value="C" id="C" ><label for="C">CORRECT</label><br/>
-			<input type="radio" name="q" value="D" id="D" ><label for="D">Incorrect</label><br/>
+			<input type="radio" name="q" value="A" id="A" ><label for="A" id= "labA">Incorrect</label><br/>
+			<input type="radio" name="q" value="B" id="B" ><label for="B" id= "labB">Incorrect</label><br/>
+			<input type="radio" name="q" value="C" id="C" ><label for="C" id= "labC">CORRECT</label><br/>
+			<input type="radio" name="q" value="D" id="D" ><label for="D" id= "labD">Incorrect</label><br/>
 			</ul> 
+
+			<img id = "qImg" alt= "Related Trove Image">
 
     		<br>
     		<center>
-    		<button id="submit_but" onclick="submitAns('C')">Submit</button>
-			<button id="hint_but" onclick="hint()">Hint</button>
+    		<button id="submit_but" onclick="submitAns()">Submit</button>
 			</center>
 
 <!--     		<a href="#" onclick="popup('popUpDiv')" >Click to Close CSS Pop Up</a> -->
@@ -41,11 +44,7 @@
 		<!-- OUTCOME  -->
 		<div id = "outcomeDiv" style = "display:none;">
 
-<<<<<<< HEAD
 			<br><h1><center id="outcomeText">Outcome</center></h1>
-=======
-			<br><center id="outcomeText">Outcome</center>
->>>>>>> 33b521b131c361c0f1de36e27b84f0d7b7f9c4dd
 			
 			<center><a href="#" onclick="closeOutcome()" >Continue</a></center>
 
@@ -82,13 +81,13 @@
 		<button class="canvas_btn" id="menuBtn">MENU</button>
 
         <ul id="menu">
-            <li><a href ="#" id="menuPause" onclick = "menu.pauseResume()">Pause</a></li>
-            <li><a href ="#" onclick = "menu.restart()">Restart</a></li>
-            <li><a href="#" onclick = "menu.quit()">Quit</a></li>
-            <li><a href="#" onclick = "displayInstructs()">Instructions</a></li>
+            <li><a href ="#" id="menuPause" onclick = "menu.pauseResume()">Pause  (space)</a></li>
+            <li><a href ="#" onclick = "menu.restart()">Restart (r)</a></li>
+            <li><a href="#" onclick = "menu.quit()">Quit  (q)</a></li>
+            <li><a href="#" onclick = "displayInstructs()">Instructions  (i)</a></li>
         </ul>
 	    
-		<button class="canvas_btn" id="soundBtn" onclick = "game.audio.toggle()">SOUND: ON</button>
+		<button class="canvas_btn" id="soundBtn" onclick = "game.audio.toggle()">SOUND(s): ON</button>
 
 
 		<!--Custom Confirm Box -->
@@ -98,6 +97,13 @@
 
 			<button id="yes">Yes</button>
 			<button id="cancel">Cancel</button>
+		</div>
+
+		<!-- Custom Alert Box -->
+		<div id = "alertDiv" style = "display: none;">
+			<br><center><p id ="alertInfo">INFO</p></center>
+
+			<button id="alertOk">OK</button>
 		</div>
 
 		<!--       Game Start (settings)            -->
@@ -144,6 +150,7 @@
 			<p>2 BOB 100</p>
 			<p>3 BOB 100</p>
 			<p>4 BOB 100</p>
+			<p id="finalScore"> </p>
 
 			<button id="restart" onclick="newGame()">Restart</button>
 			<button id="Logout">Logout</button>

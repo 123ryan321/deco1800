@@ -57,6 +57,17 @@ var scale = {
 }
 
 
+function Question(keyword, question, ansA, ansB, ansC, ansD, correct) {
+
+	this.keyword = keyword;
+	this.q = question; 
+	this.ansA = ansA;
+	this.ansB = ansB;
+	this.ansC = ansC;
+	this.ansD = ansD;
+	this.corr = correct;
+}
+
 // node images
 var nodesReady_lck = false;
 var nodesReady_unlck = false;
@@ -85,10 +96,11 @@ nodeHeight = nodeImage_lck.height*scale.h;
 
 var numUnlcked = 0;	//number of unlocked nodes
 
-function Node (name, x, y) {
+function Node (name, x, y, questions) {
 	this.name = name;
 	this.x = x; 
 	this.y = y;
+	this.questions = questions;
 
 
 
@@ -103,27 +115,53 @@ function Node (name, x, y) {
 };
 
 var nodes = [
-<<<<<<< HEAD
-	new Node("South Queensland", 975, 350),
-	new Node("North Queensland", 860, 150),
-	new Node("New South Wales", 900, 550),
-	new Node("Australian Capital Territory", 970, 610),
-	new Node("Victoria", 800, 720),
-	new Node("Tasmania", 850, 860),
-	new Node("South Australia", 510, 500),
-	new Node("Western Australia", 150, 500),
-	new Node("Northern Territory", 560, 250),
-=======
-	new Node("QLD_sth", 975, 350),
-	new Node("QLD_nth", 860, 150),
-	new Node("NSW", 900, 550),
-	new Node("ACT", 970, 610),
-	new Node("VIC", 800, 720),
-	new Node("TAS", 850, 860),
-	new Node("SA", 510, 500),
-	new Node("WA", 150, 500),
-	new Node("NT", 560, 250),
->>>>>>> 33b521b131c361c0f1de36e27b84f0d7b7f9c4dd
+
+	new Node("South Queensland", 975, 350, [
+		new Question("Dreamworld", 
+			"What is Australias largest theme park?",
+			 "DreamWorld", "Wet n Wild", "Australia Fair", "Outback Spectacular", "A"), 
+		]),
+
+	new Node("North Queensland", 860, 150,[
+		new Question("Great Barrier Reef", 
+			"What is the largest coral reef in the northern territory?",
+			 "Reef Casino", "Steve Irwin Reef", "Great Barrier Reef", "Florida Keys Reef", "C"),
+		]),
+
+	new Node("New South Wales", 900, 550, [
+		new Question("Sydney Opera House", "Which world known opera house is situated in NSW?",
+			"QPAC", "Sydney Opera House", "Bondi Beach Opera House", "Florida Opera House", "B"),
+		]),
+
+	new Node("Australian Capital Territory", 970, 610,[
+		new Question("Parliment House", "Where is the meeting place of the Australian government?", 
+			"Sydney Opera House", "Ayers Rock", "Brisbane Airport", "Parliment House", "D"),
+		]),
+
+	new Node("Victoria", 800, 720, [
+		new Question("Melbourne Cricket Ground", "Which cricket ground host the boxing day test match?",
+			"SCG", "MCG", "Gabba", "WACA", "B"),
+		]),
+
+	new Node("Hobart", 850, 860, [
+		new Question("Tasmainian Devil", "Which of the following animals is native to Tasmainia?", 
+			"Pedigree Falcon", "Mountain Goat", "Emu", "Tasmainian Devil", "D"),
+		]),
+
+	new Node("South Australia", 510, 500, [
+		new Question("Adelaide Zoo", "What is Australias second oldest zoo?", 
+			"Adelaide Zoo", "Central Park Zoo", "Australia Zoo", "Alma Park Zoo", "A"),
+		]),
+
+	new Node("Western Australia", 150, 500, [
+		new Question("Perth Mint", "What is the name of Australias official mint",
+			"Pepper Mint", "The Australian Coinery", "Perth Mint", "Crown Casino", "C"),
+		]),
+
+	new Node("Northern Territory", 560, 250, [
+		new Question("Ayers Rock", "A large sandstone rock formation sits in the middle of the Austrian Outback, it is commonly known as Uluru or?",
+			"Kata Tjuta", "Ayers Rock", "The Rock", "Pride Rock", "B"),
+		]),
 	];
 
 function InfoNode (x,y) {
@@ -160,8 +198,21 @@ var scaleNodes = function() {
 		nodes_info[i].w *= scale.w;
 		nodes_info[i].h *= scale.h;
 	}
+}
+
+function lockNodes() {
+	
+	for(i = 0; i < nodes.length; i ++) {
+		nodes[i].locked = true;
+	}
 }		
 
+var infoKeyords = [ "kangaroo", "Sydney Opera House", "Uluru", 
+	"Great Barrier Reef", "James Cook", "Sunshine Coast", "Goldcoast",
+	"Tasmainian Tiger", "Tasmaninan Devil", "Cricket", "Glass House Mountains",
+	"Parliament", "Prime Minister", "Southbank", "Emu", "Dingo", "Australian Open",
+	"Platypus",
+]
 
 //Menu Object
 var menu = {
@@ -170,12 +221,12 @@ var menu = {
 			//game is playing pause
 			game.pause();
 			var x = document.getElementById("menuPause");
-			x.innerHTML = "Resume";
+			x.innerHTML = "Resume  (space)";
 		} else {
 			//resume play
 			game.resume();
 			var x = document.getElementById("menuPause");
-			x.innerHTML = "Pause";
+			x.innerHTML = "Pause   (space)";
 		}
 
 	},
@@ -278,7 +329,7 @@ var game = {
 
 	end: function(){
 		//end the game
-		alert("GAME OVER - COMPLETED");
+		alertBox("GAME OVER" + "<br>" + " You Scored: " + score.curr);
 		displayLeader();
 	}
 }
@@ -317,12 +368,12 @@ function Sound(src) {
 	this.setON = function(){
 		this.ON = true;
 		this.play();
-		this.btn.innerHTML = "SOUND: ON";
+		this.btn.innerHTML = "SOUND(s): ON";
 	}
 	this.setOFF = function(){
 		this.ON = false;
 		this.pause();
-		this.btn.innerHTML = "SOUND: OFF";
+		this.btn.innerHTML = "SOUND(s): OFF";
 
 
 	}
@@ -787,7 +838,7 @@ var play = function (modifier) {
 			// at a node
 			if (nodes[check.idx].locked) {
 				//locked node 
-				playMini(nodes[check.idx].name);
+				playMini(nodes[check.idx]);
 			} else {
 				//unlocked node - display info
 				displayTrove();
@@ -885,6 +936,7 @@ var init = function () {
 	player.x = canvas.width / 2;
 	player.y = canvas.height / 2;
 
+	lockNodes();
 	game.start();
 
 };
