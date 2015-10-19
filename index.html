@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Australian Tour Game</title>
+		<title>The Australian Race</title>
 
 		<link href="styles.css" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="js/pop_up.js"></script>
@@ -10,18 +10,18 @@
 	</head>
 	<body>
 
-	<audio id="themeSong" src="1.mp3" preload = "auto">
+	<audio id="themeSong" src="audio/pokemon1.mp3" preload = "auto">
 	</audio>
 
 		<!-- MINI GAME -->
 	    <div id="blanket" style="display:none;"></div>
 		<div id="miniGameDiv" style="display:none;">
     		
-    		<br><center id = "location">LOCATION</center>
+    		<br><h1><center id = "location">LOCATION</center></h1>
 
-    		<p >Attempts left <u id= "attempt">3</u></p>
+    		<br><p>Attempts Remaining:<b id= "attempt">3</b></p>
 
-    		<p class="question"> A QUESTION ABOUT THIS REGION</p>
+    		<p class="question">Basic Question?</p>
 			<ul class="answers">
 			<input type="radio" name="q" value="A" id="A" ><label for="A">Incorrect</label><br/>
 			<input type="radio" name="q" value="B" id="B" ><label for="B">Incorrect</label><br/>
@@ -30,8 +30,10 @@
 			</ul> 
 
     		<br>
+    		<center>
     		<button id="submit_but" onclick="submitAns('C')">Submit</button>
 			<button id="hint_but" onclick="hint()">Hint</button>
+			</center>
 
 <!--     		<a href="#" onclick="popup('popUpDiv')" >Click to Close CSS Pop Up</a> -->
 		</div>
@@ -39,25 +41,37 @@
 		<!-- OUTCOME  -->
 		<div id = "outcomeDiv" style = "display:none;">
 
-			<br><center id="outcomeText"></center>
+			<br><h1><center id="outcomeText">Outcome</center></h1>
 			
-			<a href="#" onclick="closeOutcome()" >Click to Close</a>
+			<center><a href="#" onclick="closeOutcome()" >Continue</a></center>
 
 		</div>
 
 		<div id = "troveInfoDiv" style = "display:none;">
 
 			<br><center id="qCorrect"></center>
-			<br><center>TROVE INFORMATION WILL GO HERE</center>
+			<br><h1><center>Information Pitstop</center></h1>
 
-			<a href="#" onclick="closeTrove()" >Click to Close</a>
+			<center><a href="#" onclick="closeTrove()" >Continue</a></center>
 
 		</div>
 
 		<div id = "instructionsDiv" style = "display:none;">
-			<br><center>INSTRUCTIONS</center>
+			<br><h1><center>Instructions</center></h1>
+			<h2> Objective </h2>
+			<p> Explore Australia and correctly answer questions at each landmark. </p>
+			<h2> Controls </h2>
+			<p> Directional arrows control movement. </p>
+			<p> I - Opens the instruction menu. </p>
+			<p> S - Toggle sound. </p>
+			<p> Q - Quits the game. </p>
+			<p> R - Restars the game. </p>
+			<h2> Game Icons </h2>
+			<p> Yellow Nodes - Information Pitstops. </p>
+			<p> Black Nodes - Unvisited Locations. </p>
+			<p> Red Nodes - Completed Locations. </p>
 
-			<center><a href="#" onclick="closeInstructs()">Click to Close</a></center>
+			<center><a href="#" onclick="closeInstructs()">Return To Game</a></center>
 		</div>
 
 		<!--Menu -->
@@ -84,9 +98,9 @@
 
 		<!--       Game Start (settings)            -->
 		<div id="initGameDiv" style="display: none;">
-			<br><center>GAME SETTINGS</center>
+			<br><h1><center>The Australian Race</center></h1>
 			<center><div>
-				<br><center>Choose a Character</center>
+				<br><h2><center>Character Select</center></h2>
 				<br>
 				<a href="#" onclick="settings.prev()" id="charArrowLeft">&#10094</a>
 				<img id="character" width="100" height = "60" />
@@ -95,7 +109,7 @@
 
 
 
-			<br><center>Difficulty</center>
+			<br><h2><center>Difficulty</center></h2>
 			<br>
 			<center>
 			<input type="radio" name="difficulty" value="Easy" id = "Easy"checked><label for="Easy">Easy</label>
@@ -104,7 +118,7 @@
 			</center>
 			<br>
 
-			<br><center>Sound</center>
+			<br><h2><center>Sound</center></h2>
 			<br>
 			<center>
 			<input type="radio" name="soundON" value="On" id = "on"checked><label for="on">ON</label>
@@ -114,21 +128,22 @@
 			<br>
 			<center>
 			<button id="play" onclick="settings.play()">PLAY</button>
-			<button id= "instructions" onclick="displayInstructs()">
-			INSTRUCTIONS</button>
+			<button id= "instructions" onclick="displayInstructs()">INSTRUCTIONS</button>
 			</center>
 		</div>
 
 		<div id="leaderBoardDiv" style="display:none;">
-			<h1>LEADER BOARD</h1>
-			<p>BOB 900</p>
-			<p>BOB 100</p>
-			<p>BOB 100</p>
-			<p>BOB 100</p>
+			<center>
+			<h1>Leader Board</h1>
+			<h2>Rank&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;Score</h2>
+			<p>1 BOB 900</p>
+			<p>2 BOB 100</p>
+			<p>3 BOB 100</p>
+			<p>4 BOB 100</p>
 
 			<button id="restart" onclick="newGame()">Restart</button>
 			<button id="Logout">Logout</button>
-
+			</center>
 
 		</div>
 
