@@ -227,7 +227,7 @@ function lockNodes() {
 	}
 }		
 
-var infoKeyords = [ "kangaroo", "Sydney Opera House", "Uluru", 
+var infoKeywords = [ "kangaroo", "Sydney Opera House", "Uluru", 
 	"Great Barrier Reef", "James Cook", "Sunshine Coast", "Goldcoast",
 	"Tasmainian Tiger", "Tasmaninan Devil", "Cricket", "Glass House Mountains",
 	"Parliament", "Prime Minister", "Southbank", "Emu", "Dingo", "Australian Open",
