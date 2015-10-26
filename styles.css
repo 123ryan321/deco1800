@@ -145,6 +145,7 @@ a {
 
 #troveInfoDiv {
    position:absolute;
+   overflow: scroll;
    background:#bebebe;
    width:600px;
    height:450px;
