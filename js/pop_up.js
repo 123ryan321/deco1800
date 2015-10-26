@@ -452,7 +452,7 @@ var settings = new function() {
 ////////////////////////////////////////////////////////
 function displayLeader () {
 	game.pause();
-	document.getElementById("finalScore").innerHTML = "Your Score" + score.curr;
+	document.getElementById("finalScore").innerHTML = "Your Score: " + score.curr;
 	popup("leaderBoardDiv");
 
 }
