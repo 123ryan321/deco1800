@@ -321,8 +321,9 @@ function displayTrove() {
 	//pause game
 	game.pause();
 
-
-	
+	//Set some trove infomation
+	var num = Math.floor(Math.random()*infoKeywords.length);
+	setTrove(infoKeywords[num]);	
 
 }
 
@@ -333,6 +334,37 @@ function closeTrove() {
 
 	//resume game 
 	game.resume();
+}
+
+//Set the data in this dialog as Trove articles
+function setTrove(keyword){
+
+
+        var apiKey = "jsk1qqntnrj7qbvf";
+
+        //create searh query
+        var url = "http://api.trove.nla.gov.au/result?key=" + apiKey + "&l-availability=y%2Ff&encoding=json&zone=newspaper" + "&sortby=relevance&n=8&q=" + keyword + "&callback=?" + "&include=articletext";
+        // var itemID = "131761618"
+
+		// articleURL = "http://api.trove.nla.gov.au/newspaper/"
+		// 		+ itemID
+		// 		+ "?key="+apiKey
+		// 		+ "&include=articletext,pdf&encoding=json&callback=?";
+
+        //get the JSON information we need to display the images
+        $.getJSON(url, function(data) {
+
+        	// console.log(data.article.articleText);
+        	// document.getElementById("troveArticle").innerHTML = data.article.articleText;
+
+            //get a random snippet
+            var num = Math.floor(Math.random()*10);
+            
+            // console.log(data.response.zone[0].records.article[0]);
+            document.getElementById("troveArticle").innerHTML = data.response.zone[0].records.article[num].articleText;
+            
+
+        });
 }
 
 
@@ -452,7 +484,7 @@ var settings = new function() {
 ////////////////////////////////////////////////////////
 function displayLeader () {
 	game.pause();
-	document.getElementById("finalScore").innerHTML = "Your Score" + score.curr;
+	document.getElementById("finalScore").innerHTML = "Your Score: " + score.curr;
 	popup("leaderBoardDiv");
 
 }

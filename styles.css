@@ -9,14 +9,14 @@ body {
 
 h1 {
    font-family: tahoma;
-   font-style: bold;
+   font-weight: bold;
    font-size: 20px;
    
 }
 
 h2 {
    font-family: tahoma;
-   font-style: bold;
+   font-weight: bold;
    font-size: 18px;
    line-height: 0em;
 }
@@ -48,6 +48,14 @@ a {
    list-style-type: none;
 }
 
+#qImg {
+   height:150px;
+   width:200px;
+   top: 50%;
+   left: 50%;
+   margin: -175px 0 0 375px;
+}
+
 /*     GAME SETTINGS         */
 
 /*BUTTONS OVER CANVAS*/
@@ -71,8 +79,8 @@ a {
    z-index:2;
    text-align: left;   
    line-height: 2em;
-   font-style: bold;
-   width:5%;
+   font-weight: bold;
+   width:7.5%;
    padding:10px 7.5px;
    position:absolute;
    bottom:20px;
@@ -123,8 +131,8 @@ a {
 #miniGameDiv {
 	position:absolute;
    background:#bebebe;
-   width:600px;
-   height:450px;
+   width:32.5%;
+   height:55%;
    border:7.5px solid #3c3c3c;
    border-radius:5px;
    z-index: 9001;
@@ -133,13 +141,14 @@ a {
    margin: -50px 0 0 -150px;
 }
 
-#miniGameDiv a {position:relative; top:200px;}
+#miniGameDiv a {position:relative;}
 
 #troveInfoDiv {
    position:absolute;
+   overflow: scroll;
    background:#bebebe;
-   width:600px;
-   height:450px;
+   width:25%;
+   height:55%;
    border:7.5px solid #3c3c3c;
    border-radius:5px;
    z-index: 9001;
@@ -153,34 +162,42 @@ a {
 #instructionsDiv {
    position:absolute;
    background:#bebebe;
-   width:1000px;
-   height:750px;
+   width:60%;
+   height:75%;
    border:7.5px solid #3c3c3c;
    border-radius:5px;
    z-index: 9002;
    margin: -200px 0 0 -350px;
 }
 
-#instructionsDiv a {position:relative; top:200px;}
+#instructionsDiv a {position:absolute; top:650px; left:445px;}
 
 #confirmDiv {
    position:absolute;
    background:#bebebe;
-   width:400px;
-   height:400px;
-   border:5px solid #3c3c3c;
-   z-index: 9002;
+   width:240px;
+   height:120px;
+   border:7.5px solid #3c3c3c;
+   border-radius:5px;
+   z-index: 9001;
+   top: 50%;
+   left: 50%;
+   margin: 75px 0 0 25px;
 }
 
-#confirmDiv a {position:relative; top:200px;}
+#confirmDiv a {position:relative; top:200px; left:50px;}
 
 #alertDiv {
    position:absolute;
-   background:#bebebe;
-   width:400px;
-   height:400px;
-   border:5px solid #3c3c3c;
-   z-index: 9002;
+   background:#e0e0e0;
+   width:240px;
+   height:120px;
+   border:7.5px solid #707070;
+   border-radius:5px;
+   z-index: 9001;
+   top: 50%;
+   left: 50%;
+   margin: 100px 0 0 25px;
 }
 
 #alertDiv a {position:relative; top:200px;}
@@ -189,42 +206,102 @@ a {
 #initGameDiv {
    position:absolute;
    background:#bebebe;
-   width:650px;
-   height:500px;
+   width:25%;
+   height:55%;
    border:7.5px solid #3c3c3c;
    border-radius:5px;
    z-index: 9001;
    top: 50%;
    left: 50%;
-   margin: -50px 0 0 -150px;
+   margin: -50px 0 0 -100px;
 }
 
-#initGameDiv a {position:relative;}
+#initGameDiv a {position:relative; top:-10px; font-size: 40px;}
 
 #leaderBoardDiv {
    position:absolute;
    background:#bebebe;
-   width:1000px;
-   height:750px;
+   width:25%;
+   height:50%;
    border:7.5px solid #3c3c3c;
    border-radius:5px;
    z-index: 9000;
-   margin: -200px 0 0 -350px;
-}
-
-#leaderBoardDiv a {position:relative; top:200px;}
-
-#outcomeDiv {
-   position:absolute;
-   background:#bebebe;
-   width:600px;
-   height:450px;
-   border:7.5px solid #3c3c3c;
-   border-radius:5px;
-   z-index: 9001;
    top: 50%;
    left: 50%;
    margin: -50px 0 0 -150px;
 }
 
-#outcomeDiv a {position:relative; top:200px;}
+#leaderBoardDiv a {position:relative; top:150px;}
+
+#outcomeDiv {
+   position:absolute;
+   background:#bebebe;
+   width:240px;
+   height:180px;
+   border:7.5px solid #3c3c3c;
+   border-radius:5px;
+   z-index: 9001;
+   top: 50%;
+   left: 50%;
+   margin: 75px 0 0 25px;
+}
+
+#outcomeDiv a {position:relative; top:25px;}
+
+#submit_but {
+   top: 50%;
+   left: 50%;
+   margin: 50px 0 0 0px;
+}
+
+#alertOk {
+   top: 50%;
+   left: 50%;
+   margin: 0px 0 0 100px;
+}
+
+#leadtitle {
+   word-spacing: 300px;
+}
+
+#board {
+   word-spacing: 330px;
+}
+
+#finalScore {
+   text-decoration: bold;
+}
+
+#yes {
+   top: 50%;
+   left: 50%;
+   margin: 0px 0 0 60px;
+}
+
+#info{
+
+   margin-right: 10px;
+}
+
+#arrows {
+   margin: 0px 0 0 15px;
+   float: left;
+
+}
+
+#control {
+   margin: 0 0 0 -75px;
+   float: left;
+   margin-top: 50px;
+}
+
+#intnode {
+   margin: 0 0 0 40px;
+   float: left;
+   margin-top: -10px;
+}
+
+#instruct {
+   text-indent: 170px;
+   line-height: 95%;
+}

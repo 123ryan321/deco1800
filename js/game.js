@@ -87,8 +87,8 @@ nodeImage_info.onload = function() {
 	nodesReady_info = true;
 };
 
-nodeImage_lck.src = "images/node_lck.png";
-nodeImage_unlck.src = "images/node_unlck.png";
+nodeImage_lck.src = "images/node_unlck.png";
+nodeImage_unlck.src = "images/node_lck.png";
 nodeImage_info.src = "images/node_inf.png";
 
 nodeWidth = nodeImage_lck.width*scale.w;
@@ -119,48 +119,68 @@ var nodes = [
 	new Node("South Queensland", 975, 350, [
 		new Question("Dreamworld", 
 			"What is Australias largest theme park?",
-			 "DreamWorld", "Wet n Wild", "Australia Fair", "Outback Spectacular", "A"), 
+			 "DreamWorld", "Wet 'n' Wild", "Australia Fair", "Outback Spectacular", "A"), 
+		new Question("Southbank", 
+			"Riverfire is hosted yearly at this location in </br>&nbsp;&nbsp;&nbsp;&nbsp; Brisbane?",
+			 "California", "King George", "Southport", "South Bank", "D"),
 		]),
 
 	new Node("North Queensland", 860, 150,[
 		new Question("Great Barrier Reef", 
-			"What is the largest coral reef in the northern territory?",
+			"What is the largest coral reef in Northern </br>&nbsp;&nbsp;&nbsp;&nbsp; Queensland?",
 			 "Reef Casino", "Steve Irwin Reef", "Great Barrier Reef", "Florida Keys Reef", "C"),
+		new Question("daintree", 
+			"What is the largest tropical forest in Northern </br>&nbsp;&nbsp;&nbsp;&nbsp; Queensland?",
+			 "Lone Pine Sanctuary", "Daintree Rainforest", "Big Tree Forest", "Skyrail Rainforest", "B"),
 		]),
 
 	new Node("New South Wales", 900, 550, [
-		new Question("Sydney Opera House", "Which world known opera house is situated in NSW?",
+		new Question("Sydney Opera House", "Which world known Opera House is situated in </br>&nbsp;&nbsp;&nbsp;&nbsp; NSW?",
 			"QPAC", "Sydney Opera House", "Bondi Beach Opera House", "Florida Opera House", "B"),
+		new Question("sydharbourbridge", "What iconic bridge opened in Sydney </br>&nbsp;&nbsp;&nbsp;&nbsp; in 1932?",
+			"Go Via Bridge", "Clem7", "Sydney Harbour Bridge", "Golden Gate Bridge", "C"),
 		]),
 
 	new Node("Australian Capital Territory", 970, 610,[
-		new Question("Parliment House", "Where is the meeting place of the Australian government?", 
+		new Question("Parliment House", "Where is the meeting place of the Australian </br>&nbsp;&nbsp;&nbsp;&nbsp; Government?", 
 			"Sydney Opera House", "Ayers Rock", "Brisbane Airport", "Parliment House", "D"),
+		new Question("auswarmem", "What is the name of the national </br>&nbsp;&nbsp;&nbsp;&nbsp; memorial for Australian soldiers?", 
+			"Australian War Memorial", "Anzac", "The Red Room", "A.N.W.M", "A"),
 		]),
 
 	new Node("Victoria", 800, 720, [
-		new Question("Melbourne Cricket Ground", "Which cricket ground host the boxing day test match?",
+		new Question("Melbourne Cricket Ground", "Which cricket ground hosts the boxing day test </br>&nbsp;&nbsp;&nbsp;&nbsp; match?",
 			"SCG", "MCG", "Gabba", "WACA", "B"),
+		new Question("ausopen", "What major tennis tournament is hosted </br>&nbsp;&nbsp;&nbsp;&nbsp; in Melbourne yearly?",
+			"Australian Open", "Wimbledon", "US Open", "French Open", "A"),
 		]),
 
 	new Node("Hobart", 850, 860, [
-		new Question("Tasmainian Devil", "Which of the following animals is native to Tasmainia?", 
+		new Question("Tasmainian Devil", "Which of the following animals is native to </br>&nbsp;&nbsp;&nbsp;&nbsp; Tasmainia?", 
 			"Pedigree Falcon", "Mountain Goat", "Emu", "Tasmainian Devil", "D"),
+		new Question("sydtohob", "What famous yacht race ends in </br>&nbsp;&nbsp;&nbsp;&nbsp; Tasmania?", 
+			"The Longest Yard", "The Naked Mile", "Sydney to Hobart", "Bridge to Brisbane", "C"),
 		]),
 
 	new Node("South Australia", 510, 500, [
-		new Question("Adelaide Zoo", "What is Australias second oldest zoo?", 
+		new Question("Adelaide Zoo", "What is Australia's second oldest zoo?", 
 			"Adelaide Zoo", "Central Park Zoo", "Australia Zoo", "Alma Park Zoo", "A"),
+		new Question("kangaroo", "What is this iconic Australian animal?", 
+			"Moose", "Kangaroo", "Dolphin", "Bald Eagle", "B"),
 		]),
 
 	new Node("Western Australia", 150, 500, [
-		new Question("Perth Mint", "What is the name of Australias official mint",
+		new Question("Perth Mint", "What is the name of Australias official </br>&nbsp;&nbsp;&nbsp;&nbsp; mint?",
 			"Pepper Mint", "The Australian Coinery", "Perth Mint", "Crown Casino", "C"),
+		new Question("waca", "What is the renowned cricket stadium in </br>&nbsp;&nbsp;&nbsp;&nbsp; Perth?",
+			"The Gabba", "MCG", "SCG", "WACA", "D"),
 		]),
 
 	new Node("Northern Territory", 560, 250, [
-		new Question("Ayers Rock", "A large sandstone rock formation sits in the middle of the Austrian Outback, it is commonly known as Uluru or?",
+		new Question("Ayers Rock", "A large sandstone rock formation sits in the </br>&nbsp;&nbsp;&nbsp;&nbsp; middle of the Austrian Outback, it is </br>&nbsp;&nbsp;&nbsp;&nbsp; commonly known as Uluru or?",
 			"Kata Tjuta", "Ayers Rock", "The Rock", "Pride Rock", "B"),
+		new Question("alicesprings", "What remote town is situated in the </br>&nbsp;&nbsp;&nbsp;&nbsp; Northern Territory?",
+			"Taiwan", "Florida", "Alice Springs", "Townsville", "C"),
 		]),
 	];
 
@@ -207,7 +227,7 @@ function lockNodes() {
 	}
 }		
 
-var infoKeyords = [ "kangaroo", "Sydney Opera House", "Uluru", 
+var infoKeywords = [ "kangaroo", "Sydney Opera House", "Uluru", 
 	"Great Barrier Reef", "James Cook", "Sunshine Coast", "Goldcoast",
 	"Tasmainian Tiger", "Tasmaninan Devil", "Cricket", "Glass House Mountains",
 	"Parliament", "Prime Minister", "Southbank", "Emu", "Dingo", "Australian Open",

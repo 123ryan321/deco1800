@@ -1,166 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>The Australian Race</title>
-
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-
-		<link href="styles.css" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="js/pop_up.js"></script>
-
-	</head>
-	<body>
-
-	<audio id="themeSong" src="audio/pokemon1.mp3" preload = "auto">
-	</audio>
-
-		<!-- MINI GAME -->
-	    <div id="blanket" style="display:none;"></div>
-		<div id="miniGameDiv" style="display:none;">
-    		
-    		<br><h1><center id = "location">LOCATION</center></h1>
-
-    		<br><p>Attempts Remaining:<b id= "attempt">3</b></p>
-
-    		<p class="question" id ="question">Basic Question?</p>
-			<ul class="answers">
-			<input type="radio" name="q" value="A" id="A" ><label for="A" id= "labA">Incorrect</label><br/>
-			<input type="radio" name="q" value="B" id="B" ><label for="B" id= "labB">Incorrect</label><br/>
-			<input type="radio" name="q" value="C" id="C" ><label for="C" id= "labC">CORRECT</label><br/>
-			<input type="radio" name="q" value="D" id="D" ><label for="D" id= "labD">Incorrect</label><br/>
-			</ul> 
-
-			<img id = "qImg" alt= "Related Trove Image">
-
-    		<br>
-    		<center>
-    		<button id="submit_but" onclick="submitAns()">Submit</button>
-			</center>
-
-<!--     		<a href="#" onclick="popup('popUpDiv')" >Click to Close CSS Pop Up</a> -->
-		</div>
-
-		<!-- OUTCOME  -->
-		<div id = "outcomeDiv" style = "display:none;">
-
-			<br><h1><center id="outcomeText">Outcome</center></h1>
-			
-			<center><a href="#" onclick="closeOutcome()" >Continue</a></center>
-
-		</div>
-
-		<div id = "troveInfoDiv" style = "display:none;">
-
-			<br><center id="qCorrect"></center>
-			<br><h1><center>Information Pitstop</center></h1>
-
-			<center><a href="#" onclick="closeTrove()" >Continue</a></center>
-
-		</div>
-
-		<div id = "instructionsDiv" style = "display:none;">
-			<br><h1><center>Instructions</center></h1>
-			<h2> Objective </h2>
-			<p> Explore Australia and correctly answer questions at each landmark. </p>
-			<h2> Controls </h2>
-			<p> Directional arrows control movement. </p>
-			<p> I - Opens the instruction menu. </p>
-			<p> S - Toggle sound. </p>
-			<p> Q - Quits the game. </p>
-			<p> R - Restars the game. </p>
-			<h2> Game Icons </h2>
-			<p> Yellow Nodes - Information Pitstops. </p>
-			<p> Black Nodes - Unvisited Locations. </p>
-			<p> Red Nodes - Completed Locations. </p>
-
-			<center><a href="#" onclick="closeInstructs()">Return To Game</a></center>
-		</div>
-
-		<!--Menu -->
-		<button class="canvas_btn" id="menuBtn">MENU</button>
-
-        <ul id="menu">
-            <li><a href ="#" id="menuPause" onclick = "menu.pauseResume()">Pause  (space)</a></li>
-            <li><a href ="#" onclick = "menu.restart()">Restart (r)</a></li>
-            <li><a href="#" onclick = "menu.quit()">Quit  (q)</a></li>
-            <li><a href="#" onclick = "displayInstructs()">Instructions  (i)</a></li>
-        </ul>
-	    
-		<button class="canvas_btn" id="soundBtn" onclick = "game.audio.toggle()">SOUND(s): ON</button>
-
-
-		<!--Custom Confirm Box -->
-		<div id = "confirmDiv" style = "display: none;">
-			<br><center>CONFIRM BOX</center>
-			<br><center><p id ="info">INFO</p></center>
-
-			<button id="yes">Yes</button>
-			<button id="cancel">Cancel</button>
-		</div>
-
-		<!-- Custom Alert Box -->
-		<div id = "alertDiv" style = "display: none;">
-			<br><center><p id ="alertInfo">INFO</p></center>
-
-			<button id="alertOk">OK</button>
-		</div>
-
-		<!--       Game Start (settings)            -->
-		<div id="initGameDiv" style="display: none;">
-			<br><h1><center>The Australian Race</center></h1>
-			<center><div>
-				<br><h2><center>Character Select</center></h2>
-				<br>
-				<a href="#" onclick="settings.prev()" id="charArrowLeft">&#10094</a>
-				<img id="character" width="100" height = "60" />
-				<a href="#" onclick="settings.next()" id="charArrowRight">&#10095</a>
-			</div></center>
-
-
-
-			<br><h2><center>Difficulty</center></h2>
-			<br>
-			<center>
-			<input type="radio" name="difficulty" value="Easy" id = "Easy"checked><label for="Easy">Easy</label>
-			<input type="radio" name="difficulty" value="Medium" id = "Med"><label for="Med">Medium</label>
-			<input type="radio" name="difficulty" value="Hard" id = "Hard"><label for="Hard">Hard</label>
-			</center>
-			<br>
-
-			<br><h2><center>Sound</center></h2>
-			<br>
-			<center>
-			<input type="radio" name="soundON" value="On" id = "on"checked><label for="on">ON</label>
-			<input type="radio" name="soundON" value="off" id = "off"checked><label for="off">OFF</label>
-			</center>
-
-			<br>
-			<center>
-			<button id="play" onclick="settings.play()">PLAY</button>
-			<button id= "instructions" onclick="displayInstructs()">INSTRUCTIONS</button>
-			</center>
-		</div>
-
-		<div id="leaderBoardDiv" style="display:none;">
-			<center>
-			<h1>Leader Board</h1>
-			<h2>Rank&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;Score</h2>
-			<p>1 BOB 900</p>
-			<p>2 BOB 100</p>
-			<p>3 BOB 100</p>
-			<p>4 BOB 100</p>
-			<p id="finalScore"> </p>
-
-			<button id="restart" onclick="newGame()">Restart</button>
-			<button id="Logout">Logout</button>
-			</center>
-
-		</div>
-
-  		
-
-  		<script src="js/game.js"></script>
-
-	</body>
+<head>
+    <meta charset="utf-8">
+        <title>The Australian Race</title>
+        <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+</head>
+<body>
+    <section id="Login">
+        <h1>The Australian Race</h1>
+        <form id="login" action="">
+            <label for="name">Username</label>
+            <input id="name" type="text">
+            <br>
+            <label for="numpeople">Password</label>
+            <input id="name" type="text">
+            <br>
+            <input type=button onClick="location.href='game.html'" value='Submit'>
+            <br>
+        </form>
+    </section>
+</body>
+<script ></script>
 </html>
